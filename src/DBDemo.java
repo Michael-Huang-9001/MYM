@@ -1,8 +1,11 @@
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+import javax.sql.DataSource;
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 /**
  * This class demonstrates how to connect to MySQL and run some basic commands.
@@ -63,16 +66,25 @@ public class DBDemo {
 	 * @throws SQLException
 	 */
 	public Connection getConnection() throws SQLException {
-		Connection conn = null;
-		Properties connectionProps = new Properties();
-		connectionProps.put("user", this.userName);
-		connectionProps.put("password", this.password);
+		Properties props = new Properties(); 
+		FileInputStream fis = new FileInputStream("db.properties");
+		props.load(fis);
+		DataSource mysqlDS = new MysqlDataSource();
+		mysqlDS.setURL(props.getProperty("MYSQL_DB_URL"));
+		mysqlDS.setUser(props.getProperty("MYSQL_DB_USERNAME"));
+		mysqlDS.setPassword(props.getProperty("MYSQL_DB_PASSWORD"));
+		return 
+		// Connection  conn = mysqlDS.getConnection();
+		// Connection conn = null;
+		// Properties connectionProps = new Properties();
+		// connectionProps.put("user", this.userName);
+		// connectionProps.put("password", this.password);
 
-		conn = DriverManager.getConnection("jdbc:mysql://"
-				+ this.serverName + ":" + this.portNumber + "/" + this.dbName,
-				connectionProps);
+		// conn = DriverManager.getConnection("jdbc:mysql://"
+		// 		+ this.serverName + ":" + this.portNumber + "/" + this.dbName,
+		// 		connectionProps);
 
-		return conn;
+		// return conn;
 	}
 
 	/**
