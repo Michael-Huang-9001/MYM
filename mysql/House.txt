@@ -1,0 +1,15 @@
+apartment	805 Wall St. 	Lompoc	CA	93436	1987	1500	4	4	2500
+house	671 Wild Horse Rd. 	Sacramento	CA	95823	1984	4000	3	3	3200
+apartment	536 2nd St. 	San Francisco	CA	94110	2002	4000	2	2	2800
+house	7205 Newbridge Court 	Baldwin Park	CA	91706	1984	9440	3	3	3900
+house	8 Oak Valley Drive 	Chula Vista	CA	91910	1986	1492	2	2	2400
+apartment	59 Lantern St. 	Oceanside	CA	92054	2001	2200	4	4	3800
+house	51 Wood Street 	Oakland	CA	94601	1995	4620	1	1	3400
+house	61 Greystone Avenue 	Los Angeles	CA	90034	1989	4600	3	3	4000
+apartment	47 Wintergreen Street 	Alameda	CA	94501	2010	1470	1	1	3700
+house	2 Yukon Lane 	Salinas	CA	93906	2008	7000	4	4	3300
+house	9383 Woodsman Drive 	Los Angeles	CA	90006	1988	1370	3	3	2600
+apartment	7091 Court St. 	Azusa	CA	91702	2005	1000	1	1	3300
+house	93 N. New Saddle Drive 	Indio	CA	92201	1994	1170	2	2	2600
+apartment	140 South Blackburn Dr. 	Corona	CA	92882	2006	3600	4	4	3200
+house	706 Leeton Ridge Court 	La Puente	CA	91744	1993	3020	4	4	3700

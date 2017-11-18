@@ -34,8 +34,8 @@ class DataSourceFactory {
 
 public class DataSourceTester 
 {
- public static void main (String [] args)
- {
+    public static void main (String [] args)
+    {
         DataSource ds = DataSourceFactory.getMySQLDataSource();     
        
         Connection connection =  null; 
@@ -52,5 +52,5 @@ public class DataSourceTester
     	} else {
     		System.out.println("Failed to make connection!");
     	}
- }        
+    }        
 }
