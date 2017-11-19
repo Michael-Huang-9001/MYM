@@ -27,6 +27,7 @@ CREATE TABLE User(
         phoneNumber VARCHAR(20),
         income INT,
         agentID INT,
+        updatedAt TIMESTAMP NOT NULL DEFAULT NOW() ON UPDATE NOW(),
         userID INT AUTO_INCREMENT,
         FOREIGN KEY(agentID) REFERENCES Agent(agentID),
         PRIMARY KEY(userID)
