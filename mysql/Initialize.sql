@@ -10,6 +10,7 @@ CREATE TABLE RealEstateCompany(
         PRIMARY KEY(agencyID)
 );
 
+
 DROP TABLE IF EXISTS Agent;
 CREATE TABLE Agent (
         agentName VARCHAR(30),
@@ -22,11 +23,11 @@ CREATE TABLE Agent (
 
 DROP TABLE IF EXISTS User;
 CREATE TABLE User(
-        userID INT AUTO_INCREMENT,
         userName VARCHAR(30),
-        phoneNumber VARCHAR(14),
+        phoneNumber VARCHAR(20),
         income INT,
         agentID INT,
+        userID INT AUTO_INCREMENT,
         FOREIGN KEY(agentID) REFERENCES Agent(agentID),
         PRIMARY KEY(userID)
 );
@@ -53,11 +54,9 @@ CREATE TABLE House(
 DROP TABLE IF EXISTS Appointments;
 CREATE TABLE Appointments(
         userID INT,
-        agentName VARCHAR(30),
         agentID INT,
         houseID INT,
-        date DATE,
-        time TIME,
+        date_time DATETIME,
         appointmentID INT AUTO_INCREMENT,
         FOREIGN KEY(agentID) REFERENCES Agent(agentID),
         FOREIGN KEY(userID) REFERENCES User(userID),
