@@ -21,3 +21,19 @@ WHERE bedroomCount = 2
 # 13.
 # 14.
 # 15.
+o9:
+
+9:25
+INSERT 
+INTO 
+Appointments 
+VALUES
+(1, 1, 1, 11/22/17, 9:25);
+
+INSERT 
+INTO 
+House 
+(houseType, street, city, state, year, cost, bedroomCount, bathroomCount, squareFeet, agentID)
+VALUES
+('apartment', '805 Wall St.', 'Lompoc', 'CA 93436', 1987, 1500, 4, 4, 2500, 2);
+
