@@ -6,15 +6,25 @@ INSERT INTO RealEstateCompany
 
 2. Modify the existed agent, user, house, and appointment.
 3. Find agents who can introduce houses that value less than a certain price.
-4. Find user who have certain income.
-5. Find addresses of houses that have X bed X bathrooms.
+
+#4. Find user who have certain income.
+SELECT userName
+FROM User
+WHERE User.income BETWEEN 2000 and 3000
+
+#5. Find addresses of houses that have X bed X bathrooms.
 SELECT street, city, state
 FROM House 
 WHERE bedroomCount = 2
         and bathroomCount = 2;
 
-6. Find agents who have clients that over 50K.
-7. Find the price of houses that belongs to Agency A
+#6. Find agents who have clients that make over 50K per year.
+SELECT agent.agentid, agent.agentname, user.username, user.income
+FROM (user join agent on user.agentid = agent.agentid)
+WHERE user.income*12 > 50000
+group by agentID;
+
+#7. Find the price of houses that belongs to Agency A
 SELECT *
 FROM House
 WHERE House.agentID IN (
@@ -27,12 +37,24 @@ WHERE House.agentID IN (
         )
 );
 
-8. Delete user, agent, appointment
+#8. Delete user, agent, appointment
+DELETE FROM User
+WHERE userName = 'Luke Mahoney';
+
 9. Find agency that has houses located in city A.
 10. Find agency that has agents who can show houses built before some year.
-11. Determine if a user can afford a home (check if income is 2x monthly cost).
-12. Find available/booked appointments.
-13. Look up user current booked appointments.
+
+#11. Determine if a user can afford a home (check if income is 2x monthly cost).
+SELECT houseType, street, city, state, cost, bedroomCount, bathroomCount, squarefeet
+FROM House, User
+WHERE user.userid = 10 AND income >= 2*house.cost;
+
+#12. Find available/booked appointments.
+SELECT *
+FROM Appointments
+Where agentID = 8;
+
+#13. Look up user current booked appointments.
 SELECT *
 FROM Appointments A
 WHERE EXISTS (
@@ -43,7 +65,8 @@ WHERE EXISTS (
 );
 
 14. List all the appointment of agents who belong to a certain agency.
-15. Find the number of users who are interested in a certain house
+
+#15. Find the number of users who are interested in a certain house
 SELECT houseID, COUNT(houseID)
 FROM Appointments
 GROUP BY houseID;

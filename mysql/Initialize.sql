@@ -92,8 +92,8 @@ BEGIN
 END//
 DELIMITER ;
 
-LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/RealEstateCompany.txt' INTO TABLE RealEstateCompany;
-LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/Agent.txt' INTO TABLE Agent;
-LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/User.txt' INTO TABLE User;
-LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/House.txt' INTO TABLE House;
-LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/Appointments.txt' INTO TABLE Appointments;
+LOAD DATA LOCAL INFILE '/Users/Apollo/Documents/SJSU/2017-FALL/CS157A/db-project/mysql/RealEstateCompany.txt' INTO TABLE RealEstateCompany;
+LOAD DATA LOCAL INFILE '/Users/Apollo/Documents/SJSU/2017-FALL/CS157A/db-project/mysql/Agent.txt' INTO TABLE Agent;
+LOAD DATA LOCAL INFILE '/Users/Apollo/Documents/SJSU/2017-FALL/CS157A/db-project/mysql/User.txt' INTO TABLE User;
+LOAD DATA LOCAL INFILE '/Users/Apollo/Documents/SJSU/2017-FALL/CS157A/db-project/mysql/House.txt' INTO TABLE House;
+LOAD DATA LOCAL INFILE '/Users/Apollo/Documents/SJSU/2017-FALL/CS157A/db-project/mysql/Appointments.txt' INTO TABLE Appointments;
