@@ -29,14 +29,13 @@ CREATE TABLE User(
         phoneNumber VARCHAR(20),
         income INT,
         agentID INT,
-        userID INT AUTO_INCREMENT,
         updatedAt TIMESTAMP 
                 NOT NULL 
                 DEFAULT NOW() ON UPDATE NOW(),
         FOREIGN KEY(agentID)
                 REFERENCES Agent(agentID)
                 ON DELETE CASCADE,
-        PRIMARY KEY(userID)
+        PRIMARY KEY(userName)
 );
 
 
@@ -62,7 +61,7 @@ CREATE TABLE House(
 
 DROP TABLE IF EXISTS Appointments;
 CREATE TABLE Appointments(
-        userID INT,
+        userName VARCHAR(30),
         agentID INT,
         houseID INT,
         date_time DATETIME,
@@ -70,8 +69,8 @@ CREATE TABLE Appointments(
         FOREIGN KEY(agentID) 
                 REFERENCES Agent(agentID)
                 ON DELETE CASCADE,
-        FOREIGN KEY(userID) 
-                REFERENCES User(userID)
+        FOREIGN KEY(userName) 
+                REFERENCES User(userName)
                 ON DELETE CASCADE,
         PRIMARY KEY(appointmentID)
 );
@@ -82,7 +81,6 @@ CREATE TABLE Archive(
         phoneNumber VARCHAR(20),
         income INT,
         agentID INT,
-        userID INT NOT NULL,
         updatedAt TIMESTAMP NOT NULL
 );
 
@@ -91,9 +89,9 @@ DELIMITER //
 CREATE PROCEDURE archiveInactiveUser(IN cutoff VARCHAR(50))
 BEGIN
         # Insert User tuples to Archive relation
-        INSERT INTO Archive (userName, phoneNumber, income, agentID, userID, updatedAt)
+        INSERT INTO Archive (userName, phoneNumber, income, agentID, updatedAt)
                 # Find users that has not been after cutoff date
-                SELECT userName, phoneNumber, income, agentID, userID, updatedAt
+                SELECT userName, phoneNumber, income, agentID, updatedAt
                 FROM User
                 WHERE updatedAt < cutoff;
         # Delete archived users tuples
