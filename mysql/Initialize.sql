@@ -16,7 +16,9 @@ CREATE TABLE Agent (
         agentName VARCHAR(30),
         agencyID INT,
         agentID INT AUTO_INCREMENT,
-        FOREIGN KEY(agencyID) REFERENCES RealEstateCompany(agencyID),
+        FOREIGN KEY(agencyID) 
+                REFERENCES RealEstateCompany(agencyID)
+                ON DELETE CASCADE,
         PRIMARY KEY(agentID)
 );
 
@@ -28,7 +30,12 @@ CREATE TABLE User(
         income INT,
         agentID INT,
         userID INT AUTO_INCREMENT,
-        FOREIGN KEY(agentID) REFERENCES Agent(agentID),
+        updatedAt TIMESTAMP 
+                NOT NULL 
+                DEFAULT NOW() ON UPDATE NOW(),
+        FOREIGN KEY(agentID)
+                REFERENCES Agent(agentID)
+                ON DELETE CASCADE,
         PRIMARY KEY(userID)
 );
 
@@ -46,7 +53,9 @@ CREATE TABLE House(
         squareFeet DOUBLE,
         agentID INT,
         houseID INT AUTO_INCREMENT,
-        FOREIGN KEY(agentID) REFERENCES Agent(agentID),
+        FOREIGN KEY(agentID) 
+                REFERENCES Agent(agentID)
+                ON DELETE CASCADE,
         PRIMARY KEY(houseID)
 );
 
@@ -57,37 +66,39 @@ CREATE TABLE Appointments(
         agentID INT,
         houseID INT,
         date_time DATETIME,
-        updatedAt TIMESTAMP NOT NULL DEFAULT NOW() ON UPDATE NOW(),
         appointmentID INT AUTO_INCREMENT,
-        FOREIGN KEY(agentID) REFERENCES Agent(agentID),
-        FOREIGN KEY(userID) REFERENCES User(userID),
+        FOREIGN KEY(agentID) 
+                REFERENCES Agent(agentID)
+                ON DELETE CASCADE,
+        FOREIGN KEY(userID) 
+                REFERENCES User(userID)
+                ON DELETE CASCADE,
         PRIMARY KEY(appointmentID)
 );
 
 DROP TABLE IF EXISTS Archive;
 CREATE TABLE Archive(
-        userID INT,
+        userName VARCHAR(30),
+        phoneNumber VARCHAR(20),
+        income INT,
         agentID INT,
-        houseID INT,
-        date_time DATETIME,
-        updatedAt TIMESTAMP NOT NULL,
-        appointmentID INT NOT NULL,
-        PRIMARY KEY(appointmentID)
+        userID INT NOT NULL,
+        updatedAt TIMESTAMP NOT NULL
 );
 
-DROP PROCEDURE IF EXISTS archiveInactiveAppointments;
+DROP PROCEDURE IF EXISTS archiveInactiveUser;
 DELIMITER //
-CREATE PROCEDURE archiveInactiveAppointments(IN cutoff VARCHAR(50))
+CREATE PROCEDURE archiveInactiveUser(IN cutoff VARCHAR(50))
 BEGIN
-        # Insert Appointment data to Archive relation
-        INSERT INTO Archive (userID, agentID, houseID, date_time, updatedAt, appointmentID)
-                # Find appointments that has not been after cutoff date
-                SELECT userID, agentID, houseID, date_time, updatedAt, appointmentID
-                FROM Appointments
+        # Insert User tuples to Archive relation
+        INSERT INTO Archive (userName, phoneNumber, income, agentID, userID, updatedAt)
+                # Find users that has not been after cutoff date
+                SELECT userName, phoneNumber, income, agentID, userID, updatedAt
+                FROM User
                 WHERE updatedAt < cutoff;
-        # Delete archived appointments tuples
+        # Delete archived users tuples
         DELETE
-        FROM Appointments
+        FROM User
         WHERE updatedAt < cutoff;
 END//
 DELIMITER ;
