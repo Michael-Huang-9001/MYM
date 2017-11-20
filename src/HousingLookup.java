@@ -155,22 +155,33 @@ public class HousingLookup {
 	}
 
 	private void register() {
-		User newUser = new User();
-		System.out.print("Please enter a username: ");
-		String username = in.nextLine();
-		newUser.setUsername(username);
-		System.out.print("Please enter your phone number (no dashes): ");
-		String phoneNumber = in.nextLine();
-		newUser.setPhoneNumber(phoneNumber);
-		System.out.print("Please enter your annual income: $");
-		int income = Integer.parseInt(in.nextLine());
-		newUser.setIncome(income);
-		boolean attempt = newUser.createUser(connection);
+		boolean attempt = false;
+		try {
+			User newUser = new User();
+			System.out.print("Please enter a username: ");
+			String username = in.nextLine();
+			newUser.setUsername(username);
+			System.out.print("Please enter your phone number (no dashes): ");
+			String phoneNumber = in.nextLine();
+			if (!phoneNumber.matches("^(\\d{7}|\\d{10})$")) {
+				throw new Exception("Phone numbers should be 7 or 10 digits only.");
+			}
+			newUser.setPhoneNumber(phoneNumber);
+			System.out.print("Please enter your annual income: $");
+			int income = Integer.parseInt(in.nextLine());
+			newUser.setIncome(income);
+			attempt = newUser.createUser(connection);
+		} catch (NumberFormatException n) {
+			System.out.println("Your income should only be numbers.");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
 		if (attempt) {
 			state = LOGIN_OR_REGISTER;
 		} else {
-			System.out.println(
-					"Would you like to try again? (Enter Y or yes to try again, enter any other input to return to login.)");
+			System.out.print(
+					"Would you like to try again? Y/N: ");
 			String res = in.nextLine();
 			if (!res.toLowerCase().equals("y") && !res.toLowerCase().equals("yes")) {
 				state = LOGIN_OR_REGISTER;
@@ -248,9 +259,9 @@ public class HousingLookup {
 			user.updateUserInfo(connection, newUsername, newPhoneNumber, newIncome, false);
 		}
 	}
-	
+
 	private void updateInfoInDB() {
-		
+
 	}
 
 	private void promptAdmin() {
