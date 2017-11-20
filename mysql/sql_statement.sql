@@ -1,11 +1,22 @@
-1. Create new home, real estate agency, agent, and user.
+#1. Create new home, real estate agency, agent, and user.
 INSERT INTO RealEstateCompany
         (phoneNumber, agencyName)
         VALUES
         ('(222) 681-9973', 'New Agency');
 
-2. Modify the existed agent, user, house, and appointment.
-3. Find agents who can introduce houses that value less than a certain price.
+#2. Modify the existed agent, user, house, and appointment.
+UPDATE User
+SET userName = 'Updated name'
+WHERE userID = 1;
+
+#3. Find agents who can introduce houses that value less than a certain price.
+SELECT *
+FROM Agent
+WHERE agentID IN (
+        SELECT agentID
+        FROM House
+        WHERE cost < 2000
+);
 
 #4. Find user who have certain income.
 SELECT userName
@@ -41,8 +52,31 @@ WHERE House.agentID IN (
 DELETE FROM User
 WHERE userName = 'Luke Mahoney';
 
-9. Find agency that has houses located in city A.
-10. Find agency that has agents who can show houses built before some year.
+#9. Find agency that has houses located in city A.
+SELECT *
+FROM RealEstateCompany
+WHERE agencyID IN (
+        SELECT agencyID
+        FROM Agent
+        WHERE agentID IN (
+                SELECT agentID
+                FROM House
+                WHERE city = 'San Francisco'
+        )
+);
+
+#10. Find agency that has agents who can show houses built before some year.
+SELECT *
+FROM RealEstateCompany
+WHERE agencyID IN (
+        SELECT agencyID
+        FROM Agent
+        WHERE agentID IN (
+                SELECT agentID
+                FROM House
+                WHERE year < 2000
+        )
+);
 
 #11. Determine if a user can afford a home (check if income is 2x monthly cost).
 SELECT houseType, street, city, state, cost, bedroomCount, bathroomCount, squarefeet
@@ -64,7 +98,18 @@ WHERE EXISTS (
                 AND User.userID = 2
 );
 
-14. List all the appointment of agents who belong to a certain agency.
+#14. List all the appointment of agents who belong to a certain agency.
+SELECT *
+FROM Appointments
+WHERE agentID IN (
+        SELECT agentID
+        FROM Agent
+        WHERE agencyID IN (
+                SELECT agencyID
+                FROM RealEstateCompany
+                WHERE agencyName = 'Michael Agency'
+        )
+);
 
 #15. Find the number of users who are interested in a certain house
 SELECT houseID, COUNT(houseID)
