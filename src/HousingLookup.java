@@ -221,7 +221,6 @@ public class HousingLookup {
 		} else {
 			System.out.println(user.getAgentID());
 		}
-		System.out.println("User ID: " + user.getUserID());
 		System.out.print("Would you like to update your information? Y/N: ");
 		String res = in.nextLine().toLowerCase();
 		switch (res) {
