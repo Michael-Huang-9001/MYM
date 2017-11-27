@@ -12,7 +12,6 @@ public class User {
 	private String phoneNumber;
 	private int income;
 	private int agentID;
-	private int userID;
 
 	public User() {
 	}
@@ -49,17 +48,9 @@ public class User {
 		this.agentID = agentID;
 	}
 
-	public int getUserID() {
-		return userID;
-	}
-
-	public void setUserID(int userID) {
-		this.userID = userID;
-	}
-
 	public String toString() {
 		return "Username: " + username + "\nPhone number: " + phoneNumber + "\nIncome: " + income + "\nAgentID: "
-				+ agentID + "\nUserID: " + userID;
+				+ agentID;
 	}
 
 	public boolean createUser(Connection connection) {
@@ -90,7 +81,6 @@ public class User {
 				return null;
 			}
 			User login = new User();
-			login.setUserID(result.getInt("userID"));
 			login.setUsername(result.getString("userName"));
 			login.setPhoneNumber(result.getString("phoneNumber"));
 			login.setIncome(result.getInt("income"));
@@ -115,10 +105,10 @@ public class User {
 			PreparedStatement statement;
 			if (deleteAgent) {
 				statement = connection.prepareStatement(
-						"UPDATE User SET userName = '" + username + "', phoneNumber = '" + phoneNumber + "', income = " + income + ", agentID = NULL WHERE userID = " + userID + " AND username = '" + this.username + "' AND phoneNumber = '" + this.phoneNumber + "';");
+						"UPDATE User SET userName = '" + username + "', phoneNumber = '" + phoneNumber + "', income = " + income + ", agentID = NULL WHERE username = " + this.username + "' AND phoneNumber = '" + this.phoneNumber + "';");
 			} else {
 				statement = connection.prepareStatement(
-						"UPDATE User SET userName = '" + username + "', phoneNumber = '" + phoneNumber + "', income = " + income + " WHERE userID = " + userID + " AND username = '" + this.username + "' AND phoneNumber = '" + this.phoneNumber + "';");
+						"UPDATE User SET userName = '" + username + "', phoneNumber = '" + phoneNumber + "', income = " + income + " WHERE username = '" + this.username + "' AND phoneNumber = '" + this.phoneNumber + "';");
 			}
 //			statement.setString(1, username);
 //			statement.setString(2, phoneNumber);
