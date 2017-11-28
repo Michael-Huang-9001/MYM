@@ -5,14 +5,14 @@ import javax.sql.DataSource;
 public class HousingLookup {
 	private Scanner in;
 	private int state;
-	static final int QUIT = -1;
-	static final int ADMIN_OR_USER = 0;
-	static final int LOGIN_OR_REGISTER = 1;
-	static final int LOG_IN = 2;
-	static final int REGISTER = 3;
-	static final int LOGGED_IN = 4;
-	static final int SEARCH_FOR_HOME = 999;
-	static final int ADMIN_LOGIN = 100;
+	private static final int QUIT = -1;
+	private static final int ADMIN_OR_USER = 0;
+	private static final int LOGIN_OR_REGISTER = 1;
+	private static final int LOG_IN = 2;
+	private static final int REGISTER = 3;
+	private static final int LOGGED_IN = 4;
+	private static final int SEARCH_FOR_HOME = 999;
+	private static final int ADMIN_LOGIN = 100;
 	private DataSource ds = DataSourceFactory.getMySQLDataSource();
 	private PreparedStatement statement;
 	private Connection connection;
@@ -20,6 +20,7 @@ public class HousingLookup {
 
 	public static void main(String args[]) {
 		HousingLookup housingApp = new HousingLookup();
+		// housingApp.promptUpdateInfo();
 	}
 
 	public HousingLookup() {
@@ -102,6 +103,9 @@ public class HousingLookup {
 		case "admin":
 			state = ADMIN_LOGIN;
 			break;
+		case "q":
+			state = QUIT;
+			break;
 		default:
 			System.out.println("Unrecognized input, please try again.");
 			break;
@@ -140,8 +144,7 @@ public class HousingLookup {
 		String phoneNumber = in.nextLine();
 		User login = User.login(connection, username, phoneNumber);
 		if (login == null) {
-			System.out.print(
-					"Would you like to try again? (Enter Y or yes to try again, enter any other input to return to login) ");
+			System.out.print("Would you like to try again? Y/N: ");
 			String res = in.nextLine();
 			if (!res.toLowerCase().equals("y") && !res.toLowerCase().equals("yes")) {
 				state = LOGIN_OR_REGISTER;
@@ -174,14 +177,15 @@ public class HousingLookup {
 		} catch (NumberFormatException n) {
 			System.out.println("Your income should only be numbers.");
 		} catch (Exception e) {
+			// System.out.println("Something went wrong when trying to register
+			// new user.");
 			System.out.println(e.getMessage());
 		}
 
 		if (attempt) {
 			state = LOGIN_OR_REGISTER;
 		} else {
-			System.out.print(
-					"Would you like to try again? Y/N: ");
+			System.out.print("Would you like to try again? Y/N: ");
 			String res = in.nextLine();
 			if (!res.toLowerCase().equals("y") && !res.toLowerCase().equals("yes")) {
 				state = LOGIN_OR_REGISTER;
@@ -190,6 +194,11 @@ public class HousingLookup {
 	}
 
 	private void loggedIn() {
+		if (user == null) {
+			System.out.println("Invalid user.");
+			state = QUIT;
+			return;
+		}
 		System.out.println(String.format("Hello, %s! What would you like to do?", user.getUsername()));
 		System.out.print(
 				"0: View/update my information\t1: Search for homes\t2: Search for agents\t3: Find out more about our agencies\t4: Delete account\t5: Logout\nYour choice: ");
@@ -203,6 +212,7 @@ public class HousingLookup {
 			break;
 		case "5":
 			this.logout();
+			break;
 		case "q":
 			state = QUIT;
 			break;
@@ -212,6 +222,11 @@ public class HousingLookup {
 	}
 
 	private void promptUpdateInfo() {
+		if (user == null) {
+			System.out.println("Invalid user.");
+			state = QUIT;
+			return;
+		}
 		System.out.println("Here is your current personal information.");
 		System.out.println("Username: " + user.getUsername());
 		System.out.println("Phone number: " + user.getPhoneNumber());
@@ -241,22 +256,47 @@ public class HousingLookup {
 	}
 
 	private void updatingInfo() {
-		System.out.print("New username (cannot be empty): ");
-		String newUsername = in.nextLine();
-		System.out.print("New phone number (no dashes, cannot be empty): ");
-		String newPhoneNumber = in.nextLine();
-		System.out.print("Updated income: ");
-		int newIncome = Integer.parseInt(in.nextLine());
-		System.out.print("Remove current agent? Y/N: ");
-		String res = in.nextLine().toLowerCase();
-		if (newUsername.isEmpty()) {
-			System.out.println("Username cannot be empty.");
-		} else if (newPhoneNumber.isEmpty() || newPhoneNumber.length() > 10) {
-			System.out.println("Phone number cannot be empty and must be 10 numbers or less.");
-		} else if ("y".equals(res) || "yes".equals(res)) {
-			user.updateUserInfo(connection, newUsername, newPhoneNumber, newIncome, true);
-		} else {
-			user.updateUserInfo(connection, newUsername, newPhoneNumber, newIncome, false);
+		if (user == null) {
+			System.out.println("Invalid user.");
+			state = QUIT;
+			return;
+		}
+		try {
+			System.out.print("New username: ");
+			String newUsername = in.nextLine();
+			if (newUsername.isEmpty()) {
+				newUsername = user.getUsername();
+			}
+			System.out.print("New phone number (no dashes): ");
+			String newPhoneNumber = in.nextLine();
+			if (newPhoneNumber.isEmpty()) {
+				newPhoneNumber = user.getPhoneNumber();
+			} else if (!newPhoneNumber.matches("^(\\d{7}|\\d{10})$")) {
+				throw new Exception("Phone numbers should be 7 or 10 digits only.");
+			}
+			System.out.print("Updated income: ");
+			int newIncome;
+			String newIncomeLine = in.nextLine();
+			if (newIncomeLine.isEmpty()) {
+				newIncome = user.getIncome();
+			} else {
+				newIncome = Integer.parseInt(newIncomeLine);
+			}
+			System.out.print("Remove current agent? Y/N: ");
+			String res = in.nextLine().toLowerCase();
+			if (newUsername.isEmpty()) {
+				System.out.println("Username cannot be empty.");
+			} else if (!newPhoneNumber.matches("^(\\d{7}|\\d{10})$")) {
+				throw new Exception("Phone numbers should be 7 or 10 digits only.");
+			} else if ("y".equals(res) || "yes".equals(res)) {
+				user.updateUserInfo(connection, newUsername, newPhoneNumber, newIncome, true);
+			} else {
+				user.updateUserInfo(connection, newUsername, newPhoneNumber, newIncome, false);
+			}
+		} catch (NumberFormatException n) {
+			System.out.println("Your income should only be numbers.");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
 	}
 

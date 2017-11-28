@@ -55,7 +55,7 @@ public class User {
 
 	public boolean createUser(Connection connection) {
 		try {
-			PreparedStatement statement = connection.prepareStatement("INSERT INTO User values(?,?,?, NULL, NULL);");
+			PreparedStatement statement = connection.prepareStatement("INSERT INTO User values(?,?,?, NULL);");
 			statement.setString(1, username);
 			statement.setString(2, phoneNumber);
 			statement.setInt(3, income);
@@ -63,7 +63,10 @@ public class User {
 			System.out.println("New user created successfully.");
 		} catch (SQLException e) {
 			System.out.println("Could not create new User.");
-			// e.printStackTrace();
+			e.printStackTrace();
+			System.out.println("SQLState" + e.getSQLState());
+			System.out.println("SQL Error code" + e.getErrorCode());
+			System.out.println("SQLState" + e.getCause());
 			return false;
 		}
 		return true;
@@ -99,27 +102,35 @@ public class User {
 		}
 	}
 
-	public boolean updateUserInfo(Connection connection, String username, String phoneNumber, int income,
+	public boolean updateUserInfo(Connection connection, String newUsername, String newPhoneNumber, int newIncome,
 			boolean deleteAgent) {
 		try {
 			PreparedStatement statement;
 			if (deleteAgent) {
-				statement = connection.prepareStatement(
-						"UPDATE User SET userName = '" + username + "', phoneNumber = '" + phoneNumber + "', income = " + income + ", agentID = NULL WHERE username = " + this.username + "' AND phoneNumber = '" + this.phoneNumber + "';");
+				statement = connection
+						.prepareStatement("UPDATE User SET userName = '" + newUsername + "', phoneNumber = '"
+								+ newPhoneNumber + "', income = " + newIncome + ", agentID = NULL WHERE username = '"
+								+ this.username + "' AND phoneNumber = '" + this.phoneNumber + "';");
 			} else {
-				statement = connection.prepareStatement(
-						"UPDATE User SET userName = '" + username + "', phoneNumber = '" + phoneNumber + "', income = " + income + " WHERE username = '" + this.username + "' AND phoneNumber = '" + this.phoneNumber + "';");
+				statement = connection.prepareStatement("UPDATE User SET userName = '" + newUsername
+						+ "', phoneNumber = '" + newPhoneNumber + "', income = " + newIncome + " WHERE username = '"
+						+ this.username + "' AND phoneNumber = '" + this.phoneNumber + "';");
 			}
-//			statement.setString(1, username);
-//			statement.setString(2, phoneNumber);
-//			statement.setInt(3, income);
-//			statement.setString(4, username);
-//			statement.setString(5, phoneNumber);
-			System.out.println("tuples affected: " + statement.executeUpdate());
+			// String a = "UPDATE User SET userName = ?, phoneNumber = ?, income
+			// = ? WHERE userID = ?;";
+			// statement = connection.prepareStatement(a);
+			//
+			// statement.setString(1, username);
+			// statement.setString(2, phoneNumber);
+			// statement.setInt(3, income);
+			// statement.setInt(4, 1);
+			// System.out.println("tuples affected: " +
+			// statement.executeUpdate());
+			statement.executeUpdate();
 
-			setUsername(username);
-			setPhoneNumber(phoneNumber);
-			setIncome(income);
+			setUsername(newUsername);
+			setPhoneNumber(newPhoneNumber);
+			setIncome(newIncome);
 			System.out.println("User information updated.");
 		} catch (SQLException e) {
 			System.out.println("Could not update user info.");
@@ -169,11 +180,7 @@ public class User {
 	}
 
 	public static void main(String[] args) {
-		User a = new User();
-		a.setUsername("Solace");
-		a.setIncome(60000);
-		a.setPhoneNumber("5105172299");
-		// a.createUser();
+		HousingLookup a = new HousingLookup();
 	}
 
 }
