@@ -156,8 +156,8 @@ public class HousingLookup {
 
 	private void register() {
 		boolean attempt = false;
+		User newUser = new User();
 		try {
-			User newUser = new User();
 			System.out.print("Please enter a username: ");
 			String username = in.nextLine();
 			newUser.setUsername(username);
@@ -192,16 +192,17 @@ public class HousingLookup {
 	private void loggedIn() {
 		System.out.println(String.format("Hello, %s! What would you like to do?", user.getUsername()));
 		System.out.print(
-				"0: View/update my information\t1: Search for homes\t2: Search for agents\t3: Find out more about our agencies\t4: Logout\nYour choice: ");
+				"0: View/update my information\t1: Search for homes\t2: Search for agents\t3: Find out more about our agencies\t4: Delete account\t5: Logout\nYour choice: ");
 		String command = in.nextLine().toLowerCase();
 		switch (command) {
 		case "0":
 			promptUpdateInfo();
 			break;
 		case "4":
-			state = LOGIN_OR_REGISTER;
-			user = null;
-			System.out.println("You've logged out.");
+			promptDeleteAccount();
+			break;
+		case "5":
+			this.logout();
 		case "q":
 			state = QUIT;
 			break;
@@ -262,7 +263,24 @@ public class HousingLookup {
 	private void updateInfoInDB() {
 
 	}
+	
+	private void promptDeleteAccount() {
+		System.out.print("Are you sure you want to delete your account?"
+				+ "\nIf you want to delete, type [delete]: ");
+		String res = in.nextLine().toLowerCase();
+		if (res.equals("delete")) {
+			user.deleteThisUser(connection);
+			this.logout();
+		} else {
+			System.out.println("Canceled deleting account.");
+		}
+	}
 
+	private void logout() {
+		this.state = LOGIN_OR_REGISTER;
+		user = null;
+		System.out.println("You've logged out.");
+	}
 	private void promptAdmin() {
 		System.out.print("Please enter your admin name: ");
 		String adminName = in.nextLine();
