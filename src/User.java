@@ -140,6 +140,44 @@ public class User {
 		}
 		return true;
 	}
+	
+	/**
+	 * Delete "this" user from database
+	 * @ param connection	database connection to perfome deletion
+	 * @return	true if deleted successfully and false if deleting failed
+	 */
+	public boolean deleteThisUser(Connection connection) {
+		return this.deleteUser(connection, this.username);
+	}
+	
+	/**
+	 * Delete user whose has username from parameter
+	 * @param connection	database connection to perform deletion
+	 * @param username		Username of user to be deleted
+	 * @return	true if deleted successfully and false if deleting failed
+	 */
+	private boolean deleteUser(Connection connection, String username) {
+		PreparedStatement preparedStatement = null;
+		try {
+			String sql = null;
+		    sql = "DELETE FROM User " 
+		    	+ "WHERE username=" + "?";
+		    
+		    preparedStatement = connection.prepareStatement(sql);
+		    
+		    // Set the username
+		    preparedStatement.setString(1, username);
+		    
+		    // Execute deletion
+		    preparedStatement.executeUpdate();
+			System.out.println("User deleted");
+		} catch (SQLException e) {
+			System.out.println("Could not delete user");
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
 
 	public static void main(String[] args) {
 		HousingLookup a = new HousingLookup();
