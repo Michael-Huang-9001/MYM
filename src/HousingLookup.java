@@ -201,7 +201,12 @@ public class HousingLookup {
 		}
 		System.out.println(String.format("Hello, %s! What would you like to do?", user.getUsername()));
 		System.out.print(
-				"0: View/update my information\t1: Search for homes\t2: Search for agents\t3: Find out more about our agencies\t4: Delete account\t5: Logout\nYour choice: ");
+				"0: View/update my information\n"
+				+ "1: Search for homes\n"
+				+ "2: Search for agents\n"
+				+ "3: Find out more about our agencies\n"
+				+ "4: Delete account\n"
+				+ "5: Logout\nYour choice: ");
 		String command = in.nextLine().toLowerCase();
 		switch (command) {
 		case "0":
