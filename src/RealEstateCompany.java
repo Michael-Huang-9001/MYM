@@ -33,46 +33,38 @@ public class RealEstateCompany {
 	 * @param connection	To use MySQL
 	 */
 	public static void promptUser(Connection connection) {
-		while (state != QUIT) {
-			try {
-				state = selectState();
-				switch (state) {
-				case SEARCH_BY_NAME:
-					System.out.println("In search state");
-					break;
-				default:
-					System.out.println("Unrecognized input, please try again.");
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		System.out.println("Hello");
+	 	Scanner in = new Scanner(System.in);
+	 	String command = in.nextLine().toLowerCase();
+		System.out.println("Command: " + command);
+		while (!command.equals("q")) {
+			System.out.println("Hello");
+			command = in.nextLine().toLowerCase();
+			System.out.println("Command: " + command);
 		}
+		System.out.println("Good bye");
 	}
+	// public static void promptUser(Connection connection) {
+	// 	while (state != QUIT) {
+	// 		try {
+	// 			state = selectState();
+	// 			switch (state) {
+	// 			case SEARCH_BY_NAME:
+	// 				System.out.println("In search state");
+	// 				break;
+	// 			default:
+	// 				System.out.println("Unrecognized input, please try again.");
+	// 			}
+	// 		} catch (Exception e) {
+	// 			e.printStackTrace();
+	// 		}
+	// 	}
+	// }
 	
 	/**
 	 * Select state
 	 */
 	private static int selectState() {
-		int tempState = -2;
-		System.out.print("What would you like to do about agencies?\n"
-				+ "0: Search agencies by name\n"
-				+ "B: Go back to main page\n"
-				+ "Your choice: ");
-		Scanner in = new Scanner(System.in);
-		// in.nextLine();
-		String command = in.nextLine().toLowerCase();
-		switch (command) {
-		case "0":
-			tempState = SEARCH_BY_NAME;
-			break;
-		case "b":
-			tempState = QUIT;
-			break;
-		default:
-			System.out.println("Unrecognized input, please try again.");
-		}
-		in.close();
-		return tempState;
 	}
 	/** 
 	 * Prompt admin user
