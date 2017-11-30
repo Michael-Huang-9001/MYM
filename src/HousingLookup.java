@@ -114,7 +114,7 @@ public class HousingLookup {
 
 	private void promptUser() {
 		System.out.println("Login if you have an existing account. Please register an account if you do not.");
-		System.out.print("1: Login\t2: Register\nYour choice: ");
+		System.out.print("1: Login \t2: Register\nYour choice: ");
 		String command = in.nextLine().toLowerCase();
 		switch (command) {
 		case "1":
