@@ -1,4 +1,4 @@
-#SET sql_mode='';
+SET sql_mode='';
 DROP DATABASE IF EXISTS Housing_Lookup;
 CREATE DATABASE Housing_Lookup;
 USE Housing_Lookup; 
