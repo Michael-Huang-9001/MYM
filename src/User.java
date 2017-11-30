@@ -55,7 +55,10 @@ public class User {
 
 	public boolean createUser(Connection connection) {
 		try {
-			PreparedStatement statement = connection.prepareStatement("INSERT INTO User values(?,?,?, NULL);");
+			String sql = null;
+ 			sql = "INSERT INTO User(username, phoneNumber, income) "
+ 					+ "values(?,?,?);";
+ 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, username);
 			statement.setString(2, phoneNumber);
 			statement.setInt(3, income);
