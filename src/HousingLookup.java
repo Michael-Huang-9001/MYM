@@ -212,6 +212,9 @@ public class HousingLookup {
 		case "0":
 			promptUpdateInfo();
 			break;
+		case "3":
+			RealEstateCompany.promptUser(connection);
+			break;
 		case "4":
 			promptDeleteAccount();
 			break;
