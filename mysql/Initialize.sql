@@ -1,8 +1,9 @@
-SET sql_mode='';
+#SET sql_mode='';
 DROP DATABASE IF EXISTS Housing_Lookup;
 CREATE DATABASE Housing_Lookup;
 USE Housing_Lookup; 
-DROP TABLE IF EXISTS RealEstateCompany;
+
+#DROP TABLE IF EXISTS RealEstateCompany;
 CREATE TABLE RealEstateCompany(
         phoneNumber VARCHAR(20),
         agencyName VARCHAR(30),
@@ -11,9 +12,10 @@ CREATE TABLE RealEstateCompany(
 );
 
 
-DROP TABLE IF EXISTS Agent;
+#DROP TABLE IF EXISTS Agent;
 CREATE TABLE Agent (
         agentName VARCHAR(30),
+        phoneNumber VARCHAR(30),
         agencyID INT,
         agentID INT AUTO_INCREMENT,
         FOREIGN KEY(agencyID) 
@@ -23,7 +25,7 @@ CREATE TABLE Agent (
 );
 
 
-DROP TABLE IF EXISTS User;
+#DROP TABLE IF EXISTS User;
 CREATE TABLE User(
         userName VARCHAR(30),
         phoneNumber VARCHAR(20),
@@ -39,12 +41,13 @@ CREATE TABLE User(
 );
 
 
-DROP TABLE IF EXISTS House;
+#DROP TABLE IF EXISTS House;
 CREATE TABLE House(
         houseType VARCHAR(10),
         street VARCHAR(30),
         city VARCHAR(30),
         state VARCHAR(20),
+        zipcode VARCHAR(5),
         year INT,
         cost INT,
         bedroomCount INT,
@@ -59,7 +62,7 @@ CREATE TABLE House(
 );
 
 
-DROP TABLE IF EXISTS Appointments;
+# DROP TABLE IF EXISTS Appointments;
 CREATE TABLE Appointments(
         userName VARCHAR(30),
         agentID INT,
@@ -101,8 +104,22 @@ BEGIN
 END//
 DELIMITER ;
 
-LOAD DATA LOCAL INFILE '/Users/Apollo/Documents/SJSU/2017-FALL/CS157A/db-project/mysql/RealEstateCompany.txt' INTO TABLE RealEstateCompany;
-LOAD DATA LOCAL INFILE '/Users/Apollo/Documents/SJSU/2017-FALL/CS157A/db-project/mysql/Agent.txt' INTO TABLE Agent;
-LOAD DATA LOCAL INFILE '/Users/Apollo/Documents/SJSU/2017-FALL/CS157A/db-project/mysql/User.txt' INTO TABLE User;
-LOAD DATA LOCAL INFILE '/Users/Apollo/Documents/SJSU/2017-FALL/CS157A/db-project/mysql/House.txt' INTO TABLE House;
-LOAD DATA LOCAL INFILE '/Users/Apollo/Documents/SJSU/2017-FALL/CS157A/db-project/mysql/Appointments.txt' INTO TABLE Appointments;
+LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/RealEstateCompany.csv' 
+INTO TABLE RealEstateCompany
+FIELDS TERMINATED BY ',';
+
+LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/Agent.csv'
+INTO TABLE Agent
+FIELDS TERMINATED BY ',';
+
+LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/User.csv'
+INTO TABLE User
+FIELDS TERMINATED BY ',';
+
+LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/House.csv'
+INTO TABLE House
+FIELDS TERMINATED BY ',';
+
+LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/Appointments.csv'
+INTO TABLE Appointments
+FIELDS TERMINATED BY ',';
