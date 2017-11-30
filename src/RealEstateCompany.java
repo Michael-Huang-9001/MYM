@@ -35,13 +35,11 @@ public class RealEstateCompany {
 	public static void promptUser(Connection connection) {
 		while (state != QUIT) {
 			try {
-				selectState();
+				state = selectState();
 				switch (state) {
 				case SEARCH_BY_NAME:
-					// 
 					System.out.println("In search state");
 					break;
-				
 				default:
 					System.out.println("Unrecognized input, please try again.");
 				}
@@ -54,25 +52,27 @@ public class RealEstateCompany {
 	/**
 	 * Select state
 	 */
-	private static void selectState() {
+	private static int selectState() {
+		int tempState = -2;
 		System.out.print("What would you like to do about agencies?\n"
 				+ "0: Search agencies by name\n"
 				+ "B: Go back to main page\n"
 				+ "Your choice: ");
 		Scanner in = new Scanner(System.in);
-		in.nextLine();
+		// in.nextLine();
 		String command = in.nextLine().toLowerCase();
 		switch (command) {
 		case "0":
-			state = SEARCH_BY_NAME;
+			tempState = SEARCH_BY_NAME;
 			break;
 		case "b":
-			state = QUIT;
+			tempState = QUIT;
 			break;
 		default:
 			System.out.println("Unrecognized input, please try again.");
 		}
 		in.close();
+		return tempState;
 	}
 	/** 
 	 * Prompt admin user
