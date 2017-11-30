@@ -104,8 +104,22 @@ BEGIN
 END//
 DELIMITER ;
 
-LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/RealEstateCompany.txt' INTO TABLE RealEstateCompany;
-LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/Agent.txt' INTO TABLE Agent;
-LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/User.txt' INTO TABLE User;
-LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/House.txt' INTO TABLE House;
-LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/Appointments.txt' INTO TABLE Appointments;
+LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/RealEstateCompany.csv' 
+INTO TABLE RealEstateCompany
+FIELDS TERMINATED BY ',';
+
+LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/Agent.csv'
+INTO TABLE Agent
+FIELDS TERMINATED BY ',';
+
+LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/User.csv'
+INTO TABLE User
+FIELDS TERMINATED BY ',';
+
+LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/House.csv'
+INTO TABLE House
+FIELDS TERMINATED BY ',';
+
+LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/Appointments.csv'
+INTO TABLE Appointments
+FIELDS TERMINATED BY ',';
