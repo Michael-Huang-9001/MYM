@@ -17,6 +17,8 @@ public class HousingLookup {
 	private PreparedStatement statement;
 	private Connection connection;
 	private User user;
+	private AgencyDB agencyDb;
+	
 
 	public static void main(String args[]) {
 		HousingLookup housingApp = new HousingLookup();
@@ -28,6 +30,8 @@ public class HousingLookup {
 			connection = ds.getConnection();
 			statement = connection.prepareStatement("USE Housing_Lookup;");
 			statement.executeUpdate();
+			
+			this.createDbInstances(connection);
 
 			// PreparedStatement stmt=con.prepareStatement("insert into Emp
 			// values(?,?)");
@@ -83,6 +87,21 @@ public class HousingLookup {
 				System.out.println("Database error.");
 			}
 		}
+	}
+	
+	/**
+	 * Get instance of AgencyDB
+	 * @param conn	connect to mysql
+	 * @return true if created, false if not
+	 */
+	private boolean createDbInstances(Connection conn) {
+		this.agencyDb = AgencyDB.getInstance(conn);
+		if (this.agencyDb == null) {
+			System.err.println("Failed to get instance of AgencyDB\n"
+					+ "This class is singleton cannot be instanciated more than one");
+			return false;
+		}
+		return true;
 	}
 
 	private void promptUserType() {
@@ -213,7 +232,8 @@ public class HousingLookup {
 			promptUpdateInfo();
 			break;
 		case "3":
-			RealEstateCompany.promptUser(connection);
+			AgencyPrompt rec = AgencyPrompt.getInstance(this.in, this.agencyDb);
+			rec.promptUser();
 			break;
 		case "4":
 			promptDeleteAccount();

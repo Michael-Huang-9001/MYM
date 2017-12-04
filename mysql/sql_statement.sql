@@ -56,13 +56,10 @@ WHERE userName = 'Luke Mahoney';
 SELECT *
 FROM RealEstateCompany
 WHERE agencyID IN (
-        SELECT agencyID
-        FROM Agent
-        WHERE agentID IN (
-                SELECT agentID
-                FROM House
-                WHERE city = 'San Francisco'
-        )
+	SELECT agencyID
+	FROM Agent LEFT JOIN House
+	ON Agent.agentID = House.agentID
+	WHERE city = 'San Francisco'
 );
 
 #10. Find agency that has agents who can show houses built before some year.
@@ -111,7 +108,13 @@ WHERE agentID IN (
         )
 );
 
-#15. Find the number of users who are interested in a certain house
-SELECT houseID, COUNT(houseID)
-FROM Appointments
-GROUP BY houseID;
+#15. Find houses that has more than certain number of people who are interested
+SELECT *
+FROM House h
+WHERE EXISTS (
+	SELECT houseID, COUNT(userName) AS count
+	FROM Appointments
+	WHERE h.houseID = Appointments.houseID
+	GROUP BY houseID
+	HAVING count >= 1
+)
