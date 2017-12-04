@@ -52,6 +52,75 @@ public class AgencyDB {
 		}
 		return rs;
 	}
+
+	/**
+	 * Perform query on Agency
+	 * Find agencies who has agents who can show houses located in a city
+	 * @param city name of city
+	 * @return	query result contains Agency information
+	 */
+	public ResultSet searchAngecyByCity(String city) {
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		try {
+			String sql = null;
+			sql = "SELECT * "
+					+ "FROM RealEstateCompany "
+					+ "WHERE agencyID IN ( "
+					+ "SELECT agencyID "
+					+ "FROM Agent LEFT JOIN House "
+					+ "ON Agent.agentID = House.agentID "
+					+ "WHERE city = ?);";
+
+		    preparedStatement = connection.prepareStatement(sql);
+		    
+		    // Set the name
+		    preparedStatement.setString(1, city);
+		    
+		    // Execute
+			rs = preparedStatement.executeQuery();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rs;
+	}
+
+	/**
+	 * Perform query on Agency by name
+	 * Find agencies who has agents who can show houses that are build after a certain year
+	 * @param year	year in int
+	 * @return	query result contains Agency information
+	 */
+	public ResultSet searchAngecyByYear(int yaer) {
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		try {
+			String sql = null;
+			// TODO change query
+			sql = "SELECT * "
+					+ "FROM RealEstateCompany "
+					+ "WHERE agencyID IN ( "
+					+ "SELECT agencyID "
+					+ "FROM Agent "
+					+ "WHERE agentID IN ( "
+					+ "SELECT agentID "
+					+ "FROM House "
+					+ "WHERE year < ?)"
+					+ ");";
+		    preparedStatement = connection.prepareStatement(sql);
+		    
+		    // Set the name
+		    preparedStatement.setInt(1, yaer);
+		    
+		    // Execute
+			rs = preparedStatement.executeQuery();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rs;
+	}
 	
 	/**
 	 * Create an agency in database
