@@ -56,13 +56,10 @@ WHERE userName = 'Luke Mahoney';
 SELECT *
 FROM RealEstateCompany
 WHERE agencyID IN (
-        SELECT agencyID
-        FROM Agent
-        WHERE agentID IN (
-                SELECT agentID
-                FROM House
-                WHERE city = 'San Francisco'
-        )
+	SELECT agencyID
+	FROM Agent LEFT JOIN House
+	ON Agent.agentID = House.agentID
+	WHERE city = 'San Francisco'
 );
 
 #10. Find agency that has agents who can show houses built before some year.
