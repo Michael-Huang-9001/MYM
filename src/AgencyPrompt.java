@@ -2,6 +2,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import javax.sql.DataSource;
+
 /**
  * Takes care of table RealEstateCompany
  * Singleton
@@ -19,6 +21,8 @@ public class AgencyPrompt {
 	private static final int SEARCH_BY_CITY = 1;
 	private static final int SEARCH_BY_YEAR = 2;
 	private static final int CREATE = 3;
+	private static final int MODIFY = 4;
+	private static final int DELETE = 5;
 
 	/**
 	 * To prevent from being instantiated
@@ -116,7 +120,89 @@ public class AgencyPrompt {
 	 * @param scanner	To read stdin
 	 */
 	public void promptAdmin() {
-		System.out.println("What would you like to do about agencies as admin user?");
+		System.out.println("[ADMIN] What would you like to do about agencies?");
+		while (state != QUIT) {
+			int newState = getAdminInput();
+			switch (newState) {
+			case -1:
+				state = QUIT;
+				break;
+			case 0:
+				state = SEARCH_BY_NAME;
+				promptSearchByName();
+				break;
+
+			case 1:
+				state = SEARCH_BY_CITY;
+				promptSearchByCity();
+				break;
+
+			case 3:
+				state = CREATE;
+				promptCreate();
+				break;
+
+			case 4:
+				state = MODIFY;
+				promptSearchByYear();
+				break;
+
+			case 5:
+				state = DELETE;
+				promptSearchByYear();
+				break;
+
+			default:
+				System.out.println("Unrecognized input. Please try again.");
+			}
+		}
+	}
+
+	/**
+	 * Select state
+	 */
+	private int getAdminInput() {
+		int returnInt = -2; // Initialize to invalid int
+
+		System.out.println("-----------------------------------------\n"
+				+ "What would you like to know about agencies?\n"
+				+ "Select from below\n"
+				+ "0: Search agencies by name\n"
+				+ "1: Search agencies that have houses located in a certain city.\n"
+				+ "2: Search agencies that have agents who can show houses built before some year\n"
+				+ "B: Type back to go back");
+		String command = scanner.nextLine().toLowerCase();
+		switch (command) {
+		case "0":
+			returnInt = SEARCH_BY_NAME;
+			break;
+
+		case "1":
+			returnInt = SEARCH_BY_CITY;
+			break;
+
+		case "2":
+			returnInt = SEARCH_BY_YEAR;
+			break;
+
+		case "3":
+			returnInt = CREATE;
+			break;
+
+		case "4":
+			returnInt = MODIFY;
+			break;
+
+		case "5":
+			returnInt = DELETE;
+			break;
+
+		case "b":
+		case "back":
+			returnInt = QUIT;
+			break;
+		}
+		return returnInt;
 	}
 
 	/**
@@ -159,6 +245,49 @@ public class AgencyPrompt {
 	}
 
 	/**
+	 * Prompt user to create new agency
+	 * ask name and phone# of agency
+	 * If success go back show success message and go back
+	 * else as if wants to try again
+	 */
+	private void promptCreate() {
+		boolean isQuit = false;
+		while (isQuit == false) {
+			System.out.println("Type name of new agency: ");
+			final String name = this.scanner.nextLine();
+			System.out.println("Type phone# of new agency (No dash No parenthesis: ");
+			final String phoneNum = this.scanner.nextLine();
+			
+			try {
+				this.agencyDb.create(name, phoneNum);
+				System.out.println("New agency created");
+				System.out.println("Name: " + name + " Phone#: " + phoneNum);
+				
+				isQuit = true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				if (!this.promptTryAgain()) {
+					isQuit = true;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Prompt use if wants to try again or not
+	 * @return true if wants to try again
+	 * false if not want to try again
+	 */
+	private boolean promptTryAgain() {
+		System.out.println("Would you like to try again? [Y/N]: ");
+		final String name = this.scanner.nextLine().toLowerCase();
+		if (name.equals("y") || name.equals("yes")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	/**
 	 * Output the result sets to stdout
 	 * @param rs ResutSet containing agencies' information
 	 */
@@ -185,13 +314,5 @@ public class AgencyPrompt {
 	}
 
 	public static void main(String[] args) {
-		String input = "";
-		try(Scanner scanner = new Scanner(System.in)){
-			while (!input.equals("q")) {
-				System.out.print("Input: ");
-				input = scanner.nextLine();
-				System.out.println("Input was: " + input);
-			}
-		}
 	}
 }

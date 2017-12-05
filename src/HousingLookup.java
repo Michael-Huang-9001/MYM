@@ -14,10 +14,15 @@ public class HousingLookup {
 	private static final int LOGGED_IN = 4;
 	private static final int SEARCH_FOR_HOMES = 5;
 	private static final int ADMIN_LOGIN = 100;
+	private static final int ADMIN_LOGGED_IN = 101;
+	private final String ADMIN_PW = "admin";
 	private DataSource ds = DataSourceFactory.getMySQLDataSource();
 	private PreparedStatement statement;
 	private Connection connection;
 	private User user;
+	private AgencyPrompt agencyPrompt;
+	private AgencyDB agencyDb;
+	
 
 	public static void main(String args[]) {
 		HousingLookup housingApp = new HousingLookup();
@@ -41,6 +46,9 @@ public class HousingLookup {
 			state = ADMIN_OR_USER;
 			in = new Scanner(System.in);
 
+			this.createDbInstances(connection);
+			this.createPromptInstances(in);
+
 			System.out.println("Welcome to Housing Lookup! Enter 'q' to quit the application.");
 			while (state != QUIT) {
 				try {
@@ -61,6 +69,8 @@ public class HousingLookup {
 					case LOGGED_IN:
 						loggedIn();
 						break;
+					case ADMIN_LOGGED_IN:
+						adminLoggedIn();
 					case SEARCH_FOR_HOMES:
 						searchForHomes();
 						break;
@@ -92,6 +102,21 @@ public class HousingLookup {
 				// Scanner cannot be closed.
 			}
 		}
+	}
+
+	/**
+	 * Get instance of AgencyPrompt 
+	 * @param in	to get user input
+	 * @return true if created, false if not
+	 */
+	private boolean createPromptInstances(Scanner in) {
+		this.agencyPrompt = AgencyPrompt.getInstance(in, this.agencyDb);
+		if (this.agencyDb == null) {
+			System.err.println("Failed to get instance of AgencyPrompt\n"
+					+ "This class is singleton cannot be instanciated more than one");
+			return false;
+		}
+		return true;
 	}
 
 	private void promptUserType() {
@@ -224,7 +249,7 @@ public class HousingLookup {
 			searchForAgents();
 			break;
 		case "3":
-			searchAgencies();
+			this.agencyPrompt.promptUser();
 			break;
 		case "4":
 			promptDeleteAccount();
@@ -240,6 +265,37 @@ public class HousingLookup {
 		}
 	}
 
+	private void adminLoggedIn() {
+		System.out.println("Hello, Admin! What would you like to do?");
+		System.out.print(
+				"0: View/update my information\n"
+				+ "1: Search for homes\n"
+				+ "2: Search for agents\n"
+				+ "3: Find out more about our agencies\n"
+				+ "4: Delete account\n"
+				+ "5: Logout\nYour choice: ");
+		String command = in.nextLine().toLowerCase();
+		switch (command) {
+		case "0":
+			promptUpdateInfo();
+			break;
+		case "3":
+			this.agencyPrompt.promptUser();
+
+			break;
+		case "4":
+			promptDeleteAccount();
+			break;
+		case "5":
+			this.logout();
+			break;
+		case "q":
+			state = QUIT;
+			break;
+		default:
+			System.out.println("Unrecognized input, please try again.");
+		}
+	}
 	private void promptUpdateInfo() {
 		if (user == null) {
 			System.out.println("Invalid user.");
@@ -474,7 +530,14 @@ public class HousingLookup {
 	}
 
 	private void promptAdmin() {
-		System.out.print("Please enter your admin name: ");
-		String adminName = in.nextLine();
+		System.out.print("Please enter admin password: ");
+		String password = in.nextLine();
+		if (password.equals(this.ADMIN_PW)) {
+			System.out.print("Please enter admin password: ");
+			this.state = this.ADMIN_LOGGED_IN;
+		} else {
+			System.out.println("Incorrect password");
+			state = QUIT;
+		}
 	}
 }
