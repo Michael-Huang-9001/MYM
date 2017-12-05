@@ -1,5 +1,6 @@
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 import javax.sql.DataSource;
 
 public class HousingLookup {
@@ -11,14 +12,12 @@ public class HousingLookup {
 	private static final int LOG_IN = 2;
 	private static final int REGISTER = 3;
 	private static final int LOGGED_IN = 4;
-	private static final int SEARCH_FOR_HOME = 999;
+	private static final int SEARCH_FOR_HOMES = 5;
 	private static final int ADMIN_LOGIN = 100;
 	private DataSource ds = DataSourceFactory.getMySQLDataSource();
 	private PreparedStatement statement;
 	private Connection connection;
 	private User user;
-	private AgencyDB agencyDb;
-	
 
 	public static void main(String args[]) {
 		HousingLookup housingApp = new HousingLookup();
@@ -30,8 +29,6 @@ public class HousingLookup {
 			connection = ds.getConnection();
 			statement = connection.prepareStatement("USE Housing_Lookup;");
 			statement.executeUpdate();
-			
-			this.createDbInstances(connection);
 
 			// PreparedStatement stmt=con.prepareStatement("insert into Emp
 			// values(?,?)");
@@ -64,6 +61,9 @@ public class HousingLookup {
 					case LOGGED_IN:
 						loggedIn();
 						break;
+					case SEARCH_FOR_HOMES:
+						searchForHomes();
+						break;
 					case ADMIN_LOGIN:
 						promptAdmin();
 						break;
@@ -75,33 +75,23 @@ public class HousingLookup {
 			}
 			System.out.println("Thank you for using Housing Lookup! We hope to see you again!");
 		} catch (SQLException sql) {
-			sql.printStackTrace();
+			// sql.printStackTrace();
+			System.out.println("Could not connect to database.");
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
+			System.out.println("Some other error has occurred.");
 		} finally {
-			in.close();
 			try {
+				in.close();
 				statement.close();
 				connection.close();
 			} catch (SQLException e) {
 				System.out.println("Database error.");
+			} catch (Exception e) {
+				// e.printStackTrace();
+				// Scanner cannot be closed.
 			}
 		}
-	}
-	
-	/**
-	 * Get instance of AgencyDB
-	 * @param conn	connect to mysql
-	 * @return true if created, false if not
-	 */
-	private boolean createDbInstances(Connection conn) {
-		this.agencyDb = AgencyDB.getInstance(conn);
-		if (this.agencyDb == null) {
-			System.err.println("Failed to get instance of AgencyDB\n"
-					+ "This class is singleton cannot be instanciated more than one");
-			return false;
-		}
-		return true;
 	}
 
 	private void promptUserType() {
@@ -133,7 +123,7 @@ public class HousingLookup {
 
 	private void promptUser() {
 		System.out.println("Login if you have an existing account. Please register an account if you do not.");
-		System.out.print("1: Login \t2: Register\nYour choice: ");
+		System.out.print("1: Login\t2: Register\nYour choice: ");
 		String command = in.nextLine().toLowerCase();
 		switch (command) {
 		case "1":
@@ -219,21 +209,22 @@ public class HousingLookup {
 			return;
 		}
 		System.out.println(String.format("Hello, %s! What would you like to do?", user.getUsername()));
-		System.out.print(
-				"0: View/update my information\n"
-				+ "1: Search for homes\n"
-				+ "2: Search for agents\n"
-				+ "3: Find out more about our agencies\n"
-				+ "4: Delete account\n"
-				+ "5: Logout\nYour choice: ");
+		System.out.print("0: View/update my information\n" + "1: Search for homes\n" + "2: Search for agents\n"
+				+ "3: Find out more about our agencies\n" + "4: Delete account\n" + "5: Logout\nYour choice: ");
 		String command = in.nextLine().toLowerCase();
 		switch (command) {
 		case "0":
 			promptUpdateInfo();
 			break;
+		case "1":
+			state = SEARCH_FOR_HOMES;
+			searchForHomes();
+			break;
+		case "2":
+			searchForAgents();
+			break;
 		case "3":
-			AgencyPrompt rec = AgencyPrompt.getInstance(this.in, this.agencyDb);
-			rec.promptUser();
+			searchAgencies();
 			break;
 		case "4":
 			promptDeleteAccount();
@@ -331,14 +322,13 @@ public class HousingLookup {
 	private void updateInfoInDB() {
 
 	}
-	
+
 	private void promptDeleteAccount() {
-		System.out.print("Are you sure you want to delete your account?"
-				+ "\nIf you want to delete, type [delete]: ");
+		System.out.print("Are you sure you want to delete your account?" + "\nIf you want to delete, type [delete]: ");
 		String res = in.nextLine().toLowerCase();
 		if (res.equals("delete")) {
 			user.deleteThisUser(connection);
-			this.logout();
+			logout();
 		} else {
 			System.out.println("Canceled deleting account.");
 		}
@@ -349,6 +339,140 @@ public class HousingLookup {
 		user = null;
 		System.out.println("You've logged out.");
 	}
+
+	private void searchForHomes() {
+		try {
+			System.out.println("What kind of unit are you looking for? (Leave blank for no preference)");
+			System.out.print("Apartment/House/Condo: ");
+			String houseType = in.nextLine();
+
+			System.out.print("Minimum rent per month: $");
+			String minCos = in.nextLine();
+			int minCost;
+			if (!minCos.matches("[0-9]*")) {
+				throw new Exception("Minimum cost is not numeric.");
+			} else {
+				minCost = convertToNumber(minCos);
+			}
+
+			System.out.print("Maximum rent per month: $");
+			String maxCos = in.nextLine();
+			int maxCost;
+			if (!maxCos.matches("[0-9]*")) {
+				throw new Exception("Maximum cost is not numeric.");
+			} else {
+				maxCost = convertToNumber(maxCos);
+			}
+
+			System.out.print("City: ");
+			String city = in.nextLine();
+
+			System.out.print("State: ");
+			String state = in.nextLine().toUpperCase();
+
+			System.out.print("Zipcode: ");
+			String zip = in.nextLine();
+			int zipcode;
+			if (!zip.matches("^(\\d{5})$") && !zip.matches("")) {
+				throw new Exception("Zipcode should be 5 numbers.");
+			} else {
+				zipcode = convertToNumber(zip);
+			}
+
+			System.out.print("Minimum bedrooms: ");
+			String minBedroom = in.nextLine();
+			int minBedroomCount;
+			if (!minBedroom.matches("[0-9]*")) {
+				throw new Exception("Minimum bedroom count is not numeric.");
+			} else {
+				minBedroomCount = convertToNumber(minBedroom);
+			}
+
+			System.out.print("Maximum bedroom: ");
+			String maxBedroom = in.nextLine();
+			int maxBedroomCount;
+			if (!maxBedroom.matches("[0-9]*")) {
+				throw new Exception("Maximum bedroom count is not numeric.");
+			} else {
+				maxBedroomCount = convertToNumber(maxBedroom);
+			}
+
+			System.out.print("Minimum bathroom count: ");
+			String minBathroom = in.nextLine();
+			int minBathroomCount;
+			if (!minBathroom.matches("[0-9]*")) {
+				throw new Exception("Minimum bathroom count is not numeric.");
+			} else {
+				minBathroomCount = convertToNumber(minBathroom);
+			}
+
+			System.out.print("Maximum bathroom count: ");
+			String maxBathroom = in.nextLine();
+			int maxBathroomCount;
+			if (!maxBathroom.matches("[0-9]*")) {
+				throw new Exception("Maximum bathroom count is not numeric.");
+			} else {
+				maxBathroomCount = convertToNumber(maxBathroom);
+			}
+
+			System.out.print("Oldest year built: ");
+			String miYear = in.nextLine();
+			int minYear;
+			if (!miYear.matches("[0-9]*")) {
+				throw new Exception("Invalid year.");
+			} else {
+				minYear = convertToNumber(miYear);
+			}
+
+			System.out.print("Newest year built: ");
+			String maYear = in.nextLine();
+			int maxYear;
+			if (!maYear.matches("[0-9]*")) {
+				throw new Exception("Invalid year.");
+			} else {
+				maxYear = convertToNumber(maYear);
+			}
+
+			ArrayList<House> result = House.searchHomes(connection, houseType, minCost, maxCost, city, state, zipcode,
+					minBedroomCount, maxBedroomCount, minBathroomCount, maxBathroomCount, minYear, maxYear);
+
+			for (House h : result) {
+				System.out.println(h.toString());
+			}
+		} catch (SQLException sql) {
+			sql.printStackTrace();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		// bedroomCount INT, bathroomCount INT, squareFeet DOUBLE, agentID INT,
+		// houseID INT AUTO_INCREMENT, FOREIGN KEY(agentID) REFERENCES
+		// Agent(agentID) ON DELETE CASCADE, PRIMARY KEY(houseID)
+
+		System.out.print("Would you like to try again? Y/N: ");
+		String res = in.nextLine();
+		if (!res.toLowerCase().equals("y") && !res.toLowerCase().equals("yes")) {
+			state = LOGGED_IN;
+		} else {
+			state = SEARCH_FOR_HOMES;
+		}
+	}
+
+	private int convertToNumber(String str) {
+		if (str.isEmpty()) {
+			return 0;
+		} else {
+			return Integer.parseInt(str);
+		}
+	}
+
+	private void searchForAgents() {
+
+	}
+
+	private void searchAgencies() {
+
+	}
+
 	private void promptAdmin() {
 		System.out.print("Please enter your admin name: ");
 		String adminName = in.nextLine();
