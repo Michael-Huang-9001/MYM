@@ -97,7 +97,6 @@ public class AgencyDB {
 		ResultSet rs = null;
 		try {
 			String sql = null;
-			// TODO change query
 			sql = "SELECT * "
 					+ "FROM RealEstateCompany "
 					+ "WHERE agencyID IN ( "
@@ -126,11 +125,19 @@ public class AgencyDB {
 	 * Create an agency in database
 	 * @param phoneNum
 	 * @param name
-	 * @return true when an agency created, false when something went wrong
+	 * @return	void
 	 */
-	private static boolean createCompany(String phoneNum, String name) {
-		return false;
+	public void create(String name, String phoneNum) throws SQLException {
+		PreparedStatement preparedStatement = null;
+		String sql = null;
 		
+		sql = "INSERT INTO RealEstateCompany (phoneNumber, agencyName) VALUES (?, ?);";
+
+	    preparedStatement = connection.prepareStatement(sql);
+	    
+	    preparedStatement.setString(1, phoneNum);
+	    preparedStatement.setString(2, name);
+	    preparedStatement.executeUpdate();
 	}
 	
 	private static void printResultSetfromFaculty(ResultSet rs) throws SQLException
