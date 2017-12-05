@@ -4,15 +4,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
 public class House {
-	
+
 	private String houseType;
 	private String street;
 	private String city;
-	private String stateOfResidence;
+	private String state;
+	private int zipcode;
 	private int year;
 	private int cost;
 	private int bedroomCount;
@@ -20,11 +22,11 @@ public class House {
 	private double squareFeet;
 	private int agentID;
 	private int houseID;
-	
+
 	public House() {
-		
+
 	}
-	
+
 	public String getHouseType() {
 		return houseType;
 	}
@@ -49,12 +51,20 @@ public class House {
 		city = house_city;
 	}
 
-	public String getStateOfResidence() {
-		return stateOfResidence;
+	public String getState() {
+		return state;
 	}
 
-	public void setStateOfResidence(String house_state) {
-		stateOfResidence = house_state;
+	public void setState(String house_state) {
+		state = house_state;
+	}
+
+	public int getZipcode() {
+		return zipcode;
+	}
+
+	public void setZipcode(int zipcode) {
+		this.zipcode = zipcode;
 	}
 
 	public int getYear() {
@@ -111,6 +121,54 @@ public class House {
 
 	public void setHouseID(int house_id) {
 		houseID = house_id;
+	}
+
+	public String toString() {
+		return "Unit type: " + houseType + "\tStreet: " + street + "\tCity: " + city + "\tState: " + state + "\tZip: "
+				+ zipcode + "\tYear: " + year + "\tCost: " + cost;
+	}
+
+	public static ArrayList<House> searchHomes(Connection connection, String houseType, int minCost, int maxCost,
+			String city, String state, int zipcode, int minBedroom, int maxBedroom, int minBathroom, int maxBathroom,
+			int minYear, int maxYear) {
+		// house, costs, city, state, zip, bedroom, bathroom,year
+		try {
+			String query = "SELECT * FROM HOUSE";
+			if (!houseType.isEmpty()) {
+				
+			}
+
+			query += ";";
+			PreparedStatement statement = connection.prepareStatement(query);
+			ResultSet result = statement.executeQuery();
+			ArrayList<House> search = new ArrayList<House>();
+			while (result.next()) {
+				House house = new House();
+				house.setHouseType(result.getString("houseType"));
+				house.setStreet(result.getString("street"));
+				house.setCity(result.getString("city"));
+				house.setState(result.getString("state"));
+				house.setZipcode(result.getInt("zipcode"));
+				house.setYear(result.getInt("year"));
+				house.setCost(result.getInt("cost"));
+				house.setBedroomCount(result.getInt("bedroomCount"));
+				house.setBathroomCount(result.getInt("bathroomCount"));
+				house.setSquareFeet(result.getDouble("squareFeet"));
+				house.setAgentID(result.getInt("agentID"));
+				house.setHouseID(result.getInt("houseID"));
+				search.add(house);
+			}
+			return search;
+		} catch (SQLException e) {
+			System.out.println("Could not log in.");
+			// System.out.println(e.getErrorCode());
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static void main(String[] args) {
+
 	}
 
 }
