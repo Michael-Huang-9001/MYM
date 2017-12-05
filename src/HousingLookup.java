@@ -105,6 +105,20 @@ public class HousingLookup {
 	}
 
 	/**
+	 * Get instance of AgencyDB 
+	 * @param in	to get user input
+	 * @return true if created, false if not
+	 */
+	private boolean createDbInstances(Connection conn) {
+		this.agencyDb = AgencyDB.getInstance(conn);
+		if (this.agencyDb == null) {
+			System.err.println("Failed to get instance of AgencyDB\n"
+					+ "This class is singleton cannot be instanciated more than one");
+			return false;
+		}
+		return true;
+	}
+	/**
 	 * Get instance of AgencyPrompt 
 	 * @param in	to get user input
 	 * @return true if created, false if not
@@ -280,7 +294,7 @@ public class HousingLookup {
 			promptUpdateInfo();
 			break;
 		case "3":
-			this.agencyPrompt.promptUser();
+			this.agencyPrompt.promptAdmin();
 
 			break;
 		case "4":
@@ -522,10 +536,6 @@ public class HousingLookup {
 	}
 
 	private void searchForAgents() {
-
-	}
-
-	private void searchAgencies() {
 
 	}
 
