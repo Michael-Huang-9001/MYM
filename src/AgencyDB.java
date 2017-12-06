@@ -12,14 +12,14 @@ import java.sql.SQLException;
 public class AgencyDB {
 	private static AgencyDB instance = null;
 	private Connection connection;
-	
+
 	public static AgencyDB getInstance(Connection conn) {
 		if (instance == null) {
 			instance = new AgencyDB(conn);
 		}
 		return instance;
 	}
-	
+
 	private AgencyDB(Connection conn) {
 		this.connection = conn;
 	}
@@ -38,18 +38,45 @@ public class AgencyDB {
 					+ "FROM RealEstateCompany "
 					+ "WHERE agencyName=?;";
 
-		    preparedStatement = connection.prepareStatement(sql);
-		    
-		    // Set the name
-		    preparedStatement.setString(1, name);
-		    
-		    // Execute
+			preparedStatement = connection.prepareStatement(sql);
+
+			// Set the name
+			preparedStatement.setString(1, name);
+
+			// Execute
 			rs = preparedStatement.executeQuery();
-			
+
 			// printResultSetfromFaculty(rs);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return rs;
+	}
+
+	/**
+	 * Perform query on Agency by name and phonenumber
+	 * @param name	Name of agency to be searched
+	 * @return	query result contains Agency information
+	 * @throws SQLException 
+	 */
+	public ResultSet searchAngecyByNameAndPhone(String name, String phoneNum) throws SQLException {
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		String sql = null;
+		sql = "SELECT * "
+				+ "FROM RealEstateCompany "
+				+ "WHERE agencyName=? AND phoneNumber=?;";
+
+		preparedStatement = connection.prepareStatement(sql);
+
+		// Set the name
+		preparedStatement.setString(1, name);
+		preparedStatement.setString(2, phoneNum);
+
+		// Execute
+		rs = preparedStatement.executeQuery();
+
+		printResultSetfromFaculty(rs);
 		return rs;
 	}
 
@@ -72,14 +99,14 @@ public class AgencyDB {
 					+ "ON Agent.agentID = House.agentID "
 					+ "WHERE city = ?);";
 
-		    preparedStatement = connection.prepareStatement(sql);
-		    
-		    // Set the name
-		    preparedStatement.setString(1, city);
-		    
-		    // Execute
+			preparedStatement = connection.prepareStatement(sql);
+
+			// Set the name
+			preparedStatement.setString(1, city);
+
+			// Execute
 			rs = preparedStatement.executeQuery();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -107,20 +134,20 @@ public class AgencyDB {
 					+ "FROM House "
 					+ "WHERE year < ?)"
 					+ ");";
-		    preparedStatement = connection.prepareStatement(sql);
-		    
-		    // Set the name
-		    preparedStatement.setInt(1, yaer);
-		    
-		    // Execute
+			preparedStatement = connection.prepareStatement(sql);
+
+			// Set the name
+			preparedStatement.setInt(1, yaer);
+
+			// Execute
 			rs = preparedStatement.executeQuery();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return rs;
 	}
-	
+
 	/**
 	 * Create an agency in database
 	 * @param phoneNum
@@ -130,24 +157,67 @@ public class AgencyDB {
 	public void create(String name, String phoneNum) throws SQLException {
 		PreparedStatement preparedStatement = null;
 		String sql = null;
-		
+
 		sql = "INSERT INTO RealEstateCompany (phoneNumber, agencyName) VALUES (?, ?);";
 
-	    preparedStatement = connection.prepareStatement(sql);
-	    
-	    preparedStatement.setString(1, phoneNum);
-	    preparedStatement.setString(2, name);
-	    preparedStatement.executeUpdate();
+		preparedStatement = connection.prepareStatement(sql);
+
+		preparedStatement.setString(1, phoneNum);
+		preparedStatement.setString(2, name);
+		preparedStatement.executeUpdate();
 	}
-	
+
+	/**
+	 * Modify an agency in database
+	 * @param phoneNum
+	 * @param name
+	 * @return	void
+	 */
+	public void modify(
+			int aId, 
+			String newName, 
+			String newPhoneNum
+			) throws SQLException {
+		PreparedStatement preparedStatement = null;
+		String sql = null;
+
+		sql = "UPDATE RealEstateCompany "
+				+ "SET agencyName = ? , phoneNumber = ? "
+				+ "WHERE agencyID = ?;";
+
+		preparedStatement = connection.prepareStatement(sql);
+
+		preparedStatement.setString(1, newName);
+		preparedStatement.setString(2, newPhoneNum);
+		preparedStatement.setInt(3, aId);
+		preparedStatement.executeUpdate();
+	}
+
+	/**
+	 * Delete agency in database
+	 * @return	void
+	 */
+	public void delete(String name, String phoneNum) throws SQLException {
+		PreparedStatement preparedStatement = null;
+		String sql = null;
+
+		sql = "INSERT INTO RealEstateCompany (phoneNumber, agencyName) VALUES (?, ?);";
+
+		preparedStatement = connection.prepareStatement(sql);
+
+		preparedStatement.setString(1, phoneNum);
+		preparedStatement.setString(2, name);
+		preparedStatement.executeUpdate();
+	}
+
 	private static void printResultSetfromFaculty(ResultSet rs) throws SQLException
 	{
-	   while(rs.next())
-	   {
-	      String phoneNumber = rs.getString("phoneNumber"); 
-	      String agencyName = rs.getString("agencyName"); 
-	      int id = rs.getInt("agencyID");
-	      System.out.println("ID:" + id + " Name:" + agencyName + " phone#: " + phoneNumber); 
-	   }
+		while(rs.next())
+		{
+			String phoneNumber = rs.getString("phoneNumber"); 
+			String agencyName = rs.getString("agencyName"); 
+			int id = rs.getInt("agencyID");
+			System.out.println("ID:" + id + " Name:" + agencyName + " phone#: " + phoneNumber); 
+		}
 	}
 }

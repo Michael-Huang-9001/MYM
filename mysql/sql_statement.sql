@@ -23,7 +23,7 @@ SELECT userName
 FROM User
 WHERE User.income BETWEEN 2000 and 3000
 
-#5. Find addresses of houses that have X bed X bathrooms.
+# DONE 5. Find addresses of houses that have X bed X bathrooms.
 SELECT street, city, state
 FROM House 
 WHERE bedroomCount = 2
@@ -35,7 +35,7 @@ FROM (user join agent on user.agentid = agent.agentid)
 WHERE user.income*12 > 50000
 group by agentID;
 
-#7. Find the price of houses that belongs to Agency A
+#7. Find the price of houses that belongs to Agency A DO in Agency class
 SELECT *
 FROM House
 WHERE House.agentID IN (
