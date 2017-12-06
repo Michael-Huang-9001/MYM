@@ -1,0 +1,41 @@
+house,123 Sunflower Street,Alameda,CA,94501,1997,2000,3,2,1459,11
+house,245 Redwood Ave,Alameda,CA,94501,1945,1400,4,2,1892,11
+apartment,47 Wintergreen Street,Alameda,CA,94501,2010,1470,1,1,1700,25
+apartment,7091 Court St.,Azusa,CA,91702,2005,1000,1,1,1744,8
+house,1395 Sycamore Ave,Azusa,CA,91702,1985,1450,3,3,1654,8
+apartment,1401 Pickering Ln,Azusa,CA,91702,1990,1600,4,3,1893,13
+house,7205 Newbridge Court,Baldwin Park,CA,91706,1984,9440,3,3,3900,4
+apartment,3243 Los Angeles St,Baldwin Park,CA,91706,1954,1200,3,2,1475,15
+house,2906 Garvey Ln,Baldwin Park,CA,91706,1998,1500,1,1,743,20
+apartment,8 Oak Valley Drive,Chula Vista,CA,91910,1986,1492,2,2,1560,5
+apartment,5959 Rush St,Chula Vista,CA,91910,2002,1500,2,1,990,15
+house,3450 El Monte St,Chula Vista,CA,91910,1978,1000,2,2,845,21
+house,140 South Blackburn Dr,Corona,CA,92882,2006,3600,4,4,3200,9
+house,37171 Clark St,Corona,CA,92882,1995,1350,2,2,988,14
+apartment,1571 Newhall Dr,Corona,CA,92882,1901,1600,4,3,2367,18
+apartment,8501 Cedar Dr,Indio,CA,92201,1976,1300,3,2,1400,19
+condo,45901 Santa Anita Ave,Indio,CA,92201,1989,1650,4,2,2567,22
+condo,93 N. New Saddle Drive,Indio,CA,92201,1994,1170,2,2,2600,27
+house,5405 San Marcus St,La Puente,CA,91744,1999,1750,3,3,2210,12
+house,5670 Eisenhower Dr,La Puente,CA,91744,1955,1200,3,2,1890,23
+house,706 Leeton Ridge Court,La Puente,CA,91744,1993,3020,4,4,3700,28
+apartment,803 Wall St.,Lompoc,CA,93436,1987,1800,2,2,950,1
+apartment,805 Wall St.,Lompoc,CA,93436,1987,1500,2,1,950,1
+apartment,1455 Ocarina St,Lompoc,CA,93436,2007,3400,4,3,2560,16
+house,61 Greystone Avenue,Los Angeles,CA,90034,1989,4600,3,3,1800,6
+condo,9383 Woodsman Drive,Los Angeles,CA,90006,1988,1370,3,3,2600,7
+condo,1950 Zelda St,Los Angeles,CA,90006,2010,5000,2,2,1450,9
+house,51 Wood Street,Oakland,CA,94601,1995,4620,1,1,2310,6
+house,3030 Magic Ct,Oakland,CA,94601,1992,3800,3,2,658,17
+apartment,3312 Fortree St,Oakland,CA,94601,2013,4000,2,1,1195,23
+house,3555 Munchkin St,Oceanside,CA,92054,1993,2500,2,1,1200,21
+condo,59 Lantern St.,Oceanside,CA,92054,2001,2200,4,4,1600,24
+apartment,4545 Yellow Brick Rd,Oceanside,CA,92054,1994,3500,3,2,1545,24
+house,671 Wild Horse Rd.,Sacramento,CA,95823,1984,4000,3,3,2200,2
+condo,5790 Roosevelt Ave,Sacramento,CA,95823,2004,2300,2,2,1088,12
+apartment,4631 Prada St,Sacramento,CA,95823,1912,2500,3,2,1800,29
+condo,3421 Pepper Ln,Salinas,CA,93906,2009,7800,4,2,2048,30
+house,2 Yukon Lane,Salinas,CA,93906,2008,7000,4,4,2500,7
+apartment,536 2nd St.,San Francisco,CA,94110,2002,4000,2,2,1800,3
+apartment,890 Caramel Dr,San Francisco,CA,94110,1995,6000,3,2,1300,4
+condo,5490 Longden Ave,San Francisco,CA,94110,2010,5500,2,1,1294,10
