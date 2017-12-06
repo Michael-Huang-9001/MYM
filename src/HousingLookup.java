@@ -410,6 +410,7 @@ public class HousingLookup {
 		System.out.println("You've logged out.");
 	}
 
+
 	private void searchForHomes() {
 		try {
 			System.out.println("What kind of unit are you looking for? (Leave blank for no preference)");
@@ -506,9 +507,16 @@ public class HousingLookup {
 			ArrayList<House> result = House.searchHomes(connection, houseType, minCost, maxCost, city, state, zipcode,
 					minBedroomCount, maxBedroomCount, minBathroomCount, maxBathroomCount, minYear, maxYear);
 
+			System.out.println("\nSearch parameters yielded " + result.size() + " results.\n");
+			if (result.size() > 0) {
+				System.out.printf("%-15s %-30s %-20s %-7s %-10s %-10s %-10s %-12s %-15s", "House Type", "Street",
+						"City", "State", "Zipcode", "Bedrooms", "Bathrooms", "Year Built", "Monthly Cost");
+			}
+			System.out.println();
 			for (House h : result) {
 				System.out.println(h.toString());
 			}
+
 		} catch (SQLException sql) {
 			sql.printStackTrace();
 		} catch (Exception e) {
@@ -518,7 +526,7 @@ public class HousingLookup {
 		// houseID INT AUTO_INCREMENT, FOREIGN KEY(agentID) REFERENCES
 		// Agent(agentID) ON DELETE CASCADE, PRIMARY KEY(houseID)
 
-		System.out.print("Would you like to try again? Y/N: ");
+		System.out.print("Would you like to perform another search? Y/N: ");
 		String res = in.nextLine();
 		if (!res.toLowerCase().equals("y") && !res.toLowerCase().equals("yes")) {
 			state = LOGGED_IN;
