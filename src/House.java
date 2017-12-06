@@ -124,8 +124,8 @@ public class House {
 	}
 
 	public String toString() {
-		return "Unit type: " + houseType + "\tStreet: " + street + "\tCity: " + city + "\tState: " + state + "\tZip: "
-				+ zipcode + "\tYear: " + year + "\tCost: " + cost;
+		return String.format("%-15s %-30s %-20s %-7s %-10s %-10s %-10s %-12s %-15s", houseType, street, city, state,
+				zipcode, bedroomCount, bathroomCount, year, "$" + cost);
 	}
 
 	public static ArrayList<House> searchHomes(Connection connection, String houseType, int minCost, int maxCost,
@@ -134,11 +134,43 @@ public class House {
 		// house, costs, city, state, zip, bedroom, bathroom,year
 		try {
 			String query = "SELECT * FROM HOUSE";
-			if (!houseType.isEmpty()) {
-				
+
+			if (houseType.isEmpty()) {
+				query += " WHERE houseType LIKE '%'";
+			} else {
+				query += " WHERE houseType LIKE '" + houseType + "'";
 			}
 
-			query += ";";
+			if (minCost != 0 && maxCost != 0) {
+				query += " AND cost BETWEEN " + minCost + " AND " + maxCost;
+			}
+
+			if (!city.isEmpty()) {
+				query += " AND city LIKE '" + city + "'";
+			}
+
+			if (!state.isEmpty()) {
+				query += " AND state LIKE '" + state + "'";
+			}
+
+			if (zipcode != 0) {
+				query += " AND zipcode LIKE " + zipcode;
+			}
+
+			if (minBedroom != 0 && maxBedroom != 0) {
+				query += " AND bedroomCount BETWEEN " + minBedroom + " AND " + maxBedroom;
+			}
+
+			if (minBathroom != 0 && maxBathroom != 0) {
+				query += " AND bathroomCount BETWEEN " + minBathroom + " AND " + maxBathroom;
+			}
+
+			if (minYear != 0 && maxYear != 0) {
+				query += " AND year BETWEEN " + minYear + " AND " + maxYear;
+			}
+
+			query += " ORDER BY houseType ASC, city ASC;";
+			// System.out.println(query);
 			PreparedStatement statement = connection.prepareStatement(query);
 			ResultSet result = statement.executeQuery();
 			ArrayList<House> search = new ArrayList<House>();
