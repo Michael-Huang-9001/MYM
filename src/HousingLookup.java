@@ -21,7 +21,9 @@ public class HousingLookup {
 	private Connection connection;
 	private User user;
 	private AgencyPrompt agencyPrompt;
+	private ArchivePrompt archivePrompt;
 	private AgencyDB agencyDb;
+	private ArchiveDB archiveDb;
 	
 
 	public static void main(String args[]) {
@@ -112,8 +114,10 @@ public class HousingLookup {
 	 */
 	private boolean createDbInstances(Connection conn) {
 		this.agencyDb = AgencyDB.getInstance(conn);
-		if (this.agencyDb == null) {
-			System.err.println("Failed to get instance of AgencyDB\n"
+		this.archiveDb = ArchiveDB.getInstance(conn);
+		if ( this.agencyDb == null || 
+			 this.archiveDb == null) {
+			System.err.println("Failed to get instance of AgencyDB or ArchiveDB\n"
 					+ "This class is singleton cannot be instanciated more than one");
 			return false;
 		}
@@ -126,8 +130,11 @@ public class HousingLookup {
 	 */
 	private boolean createPromptInstances(Scanner in) {
 		this.agencyPrompt = AgencyPrompt.getInstance(in, this.agencyDb);
-		if (this.agencyDb == null) {
-			System.err.println("Failed to get instance of AgencyPrompt\n"
+		this.archivePrompt = ArchivePrompt.getInstance(in, this.archiveDb);
+
+		if ( this.agencyPrompt == null ||
+			 this.archivePrompt == null ) {
+			System.err.println("Failed to get instance of AgencyPrompt or ArchivePrompt\n"
 					+ "This class is singleton cannot be instanciated more than one");
 			return false;
 		}
@@ -288,7 +295,8 @@ public class HousingLookup {
 				+ "2: Search for agents\n"
 				+ "3: Find out more about our agencies\n"
 				+ "4: Delete account\n"
-				+ "5: Logout\nYour choice: ");
+				+ "5: Archive user\n"
+				+ "Q: Logout\nYour choice: ");
 		String command = in.nextLine().toLowerCase();
 		switch (command) {
 		case "0":
@@ -301,7 +309,12 @@ public class HousingLookup {
 		case "4":
 			promptDeleteAccount();
 			break;
+
 		case "5":
+			this.archivePrompt.promptAdmin();
+			break;
+
+		case "Q":
 			this.logout();
 			state = QUIT;
 			break;
