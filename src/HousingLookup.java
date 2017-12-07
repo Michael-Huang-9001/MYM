@@ -71,6 +71,7 @@ public class HousingLookup {
 						break;
 					case ADMIN_LOGGED_IN:
 						adminLoggedIn();
+						break;
 					case SEARCH_FOR_HOMES:
 						searchForHomes();
 						break;
@@ -302,6 +303,7 @@ public class HousingLookup {
 			break;
 		case "5":
 			this.logout();
+			state = QUIT;
 			break;
 		case "q":
 			state = QUIT;
