@@ -13,16 +13,6 @@ public class ArchivePrompt {
 	private static ArchivePrompt instance = null;
 	private ArchiveDB ArchiveDB;
 	private Scanner scanner;
-	/*
-	private static int state = -2;
-	private static final int QUIT = -1;
-	private static final int SEARCH_BY_NAME = 0;
-	private static final int SEARCH_BY_CITY = 1;
-	private static final int SEARCH_BY_YEAR = 2;
-	private static final int CREATE = 3;
-	private static final int MODIFY = 4;
-	private static final int DELETE = 5;
-	*/
 
 	/**
 	 * To prevent from being instantiated
