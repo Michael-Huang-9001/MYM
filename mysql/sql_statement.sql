@@ -30,10 +30,9 @@ WHERE bedroomCount = 2
         and bathroomCount = 2;
 
 #6. Find agents who have clients that make over 50K per year.
-SELECT agent.agentid, agent.agentname, user.username, user.income
-FROM (user join agent on user.agentid = agent.agentid)
-WHERE user.income*12 > 50000
-group by agentID;
+SELECT Agent.agentID, Agent.agentName, Agent.phoneNumber, User.userName, User.income, User.phoneNumber
+FROM Agent, User
+WHERE Agent.agentID = User.agentID AND User.income*12 > 50000;
 
 #7. Find the price of houses that belongs to Agency A DO in Agency class
 SELECT *
