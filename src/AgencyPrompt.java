@@ -244,6 +244,11 @@ public class AgencyPrompt {
 	private void promptSearchByYear() {
 		System.out.print("Type a year of houses that are built before: ");
 		final String year = this.scanner.nextLine();
+		
+		if (year.equals("")) {
+			System.out.println("Invalid input");
+			return;
+		}
 		ResultSet AgencyRsultSet = this.agencyDb.searchAngecyByYear(Integer.valueOf(year));
 
 		this.displayAgecy(AgencyRsultSet);

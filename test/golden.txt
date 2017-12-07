@@ -1,0 +1,15 @@
+Welcome to Housing Lookup! Enter 'q' to quit the application.
+Are you a user or an admin?
+1: User	2: Admin
+Your choice: ----------------
+Please enter admin password: Please enter admin password: ----------------
+Hello, Admin! What would you like to do?
+0: View/update my information
+1: Search for homes
+2: Search for agents
+3: Find out more about our agencies
+4: Delete account
+5: Logout
+Your choice: You've logged out.
+----------------
+Thank you for using Housing Lookup! We hope to see you again!
