@@ -16,7 +16,7 @@ public class AgentPrompt {
 	private Scanner scanner;
 	private static final int QUIT = -1;
 	private static final int SEARCH_BY_PRICE = 0;
-	private static final int SEARCH_BY_CITY = 1;
+	private static final int SEARCH_BY_INCOME = 11;
 	private static final int SEARCH_BY_YEAR = 2;
 	private static final int CREATE = 3;
 	private static final int MODIFY = 4;
@@ -107,9 +107,13 @@ public class AgentPrompt {
 			case -1:
 				state = QUIT;
 				break;
-			case 0:
+			case SEARCH_BY_PRICE:
 				state = SEARCH_BY_PRICE;
 				promptSearchByPrice();
+				break;
+			case SEARCH_BY_INCOME:
+				state = SEARCH_BY_INCOME;
+				promptSearchByIncome();
 				break;
 
 			default:
@@ -126,12 +130,8 @@ public class AgentPrompt {
 
 		System.out.println("-----------------------------------------\n"
 				+ "Select from below\n"
-				+ "0: Search agencies by name\n"
-				+ "1: Search agencies that have houses located in a certain city.\n"
-				+ "2: Search agencies that have agents who can show houses built before some year\n"
-				+ "3: Create new agency\n"
-				+ "4: Update an existing agency\n"
-				+ "5: Delete an existing agency\n"
+				+ "0: Search agencies who can show you houses\n"
+				+ "11: Search agent by client's income\n"
 				+ "B: Type back to go back");
 		String command = scanner.nextLine().toLowerCase();
 		switch (command) {
@@ -139,12 +139,8 @@ public class AgentPrompt {
 			returnInt = SEARCH_BY_PRICE;
 			break;
 
-		case "1":
-			returnInt = SEARCH_BY_CITY;
-			break;
-
-		case "2":
-			returnInt = SEARCH_BY_YEAR;
+		case "11":
+			returnInt = SEARCH_BY_INCOME;
 			break;
 
 		case "3":
@@ -181,6 +177,17 @@ public class AgentPrompt {
 		this.agentDb.displayAget(AgentRsultSet, "Found Agent", "No Agent found");
 	}
 	
+	private void promptSearchByIncome() {
+		final String input = this.getInput("Type client annual income: ");
+
+		if (input == null) {
+			return;
+		}
+
+		ResultSet AgentRsultSet = this.agentDb.searchByIncome(input);
+		this.agentDb.displayAget(AgentRsultSet, "Found Agent", "No Agent found");
+	}
+
 	/**
 	 * Used to get user input
 	 * @param inputPrompt Text to be shown to get input 

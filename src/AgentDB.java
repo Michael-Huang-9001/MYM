@@ -49,19 +49,30 @@ public class AgentDB {
 		return rs;
 	}
 
-	public void callStoredProc(String date) {
-		String sql = "{CALL archiveInactiveUser(?)}";
 
-		CallableStatement cs;
+	public ResultSet searchByIncome (String price) {
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
 		try {
-			cs = this.connection.prepareCall(sql);
-			cs.setString(1,date);
-			cs.executeQuery();
+			String sql = null;
+			sql = "SELECT * "
+					+ "FROM Agent, User "
+					+ "WHERE Agent.agentID = User.agentID AND User.income*12 > ?;";
+
+			preparedStatement = connection.prepareStatement(sql);
+
+			// Set the name
+			preparedStatement.setString(1, price);
+
+			// Execute
+			rs = preparedStatement.executeQuery();
+
+			// printResultSetfromFaculty(rs);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return rs;
 	}
-
 
 	/**
 	 * Output the result sets to stdout

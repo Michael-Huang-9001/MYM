@@ -306,7 +306,8 @@ public class HousingLookup {
 				+ "2: Search for agents\n"
 				+ "3: Find out more about our agencies\n"
 				+ "4: Delete account\n"
-				+ "5: Archive user\n"
+				+ "5: Find out more about our agents\n"
+				+ "6: Archive user\n"
 				+ "Q: Logout\nYour choice: ");
 		String command = in.nextLine().toLowerCase();
 		switch (command) {
@@ -320,8 +321,12 @@ public class HousingLookup {
 		case "4":
 			promptDeleteAccount();
 			break;
-
+			
 		case "5":
+			this.agentPrompt.promptAdmin();
+			break;
+
+		case "6":
 			this.archivePrompt.promptAdmin();
 			break;
 
