@@ -135,6 +135,11 @@ public class AgencyPrompt {
 				promptSearchByCity();
 				break;
 
+			case 2:
+				state = SEARCH_BY_YEAR;
+				promptSearchByYear();
+				break;
+
 			case 3:
 				state = CREATE;
 				promptCreate();
@@ -283,6 +288,10 @@ public class AgencyPrompt {
 		while (isQuit == false) {
 			try {
 				final int agencyID = this.promptSearchByNameAndPhone();
+				if (agencyID == -1) {
+					isQuit = true;
+					continue;
+				}
 				this.promptNewAgency(agencyID);
 				isQuit = true;
 			} catch (SQLException e) {
@@ -328,6 +337,9 @@ public class AgencyPrompt {
 		this.displayAgecy(rs, "Modifying this agency", "No agency found");
 		
 		final int aId = this.getAgencyID(rs);
+		if (aId == -1) {
+			
+		}
 
 		return aId;
 	}
@@ -341,6 +353,11 @@ public class AgencyPrompt {
 	private int getAgencyID(ResultSet rs) throws SQLException {
 		int id = -1;
 		rs.beforeFirst();
+		
+		// No result
+		if (!rs.isBeforeFirst()) {
+			return -1;
+		}
 		rs.next();
 		id = rs.getInt("agencyID");
 		return id;
