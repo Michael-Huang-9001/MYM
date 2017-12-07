@@ -22,19 +22,22 @@ public class AgentDB {
 		this.connection = conn;
 	}
 
-	public ResultSet searchUserInactiveAfter(String cutOffDate) {
+	public ResultSet searchByPrice (String price) {
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 		try {
 			String sql = null;
-			sql = "SELECT userName, phoneNumber, income, agentID, updatedAt "
-					+ "FROM User "
-					+ "WHERE updatedAt < ?;";
+			sql = "SELECT * "
+					+ "FROM Agent "
+					+ "WHERE agentID IN ( "
+					+ "SELECT agentID "
+					+ "FROM House "
+					+ "WHERE cost < ?);";
 
 			preparedStatement = connection.prepareStatement(sql);
 
 			// Set the name
-			preparedStatement.setString(1, cutOffDate);
+			preparedStatement.setString(1, price);
 
 			// Execute
 			rs = preparedStatement.executeQuery();
@@ -60,14 +63,31 @@ public class AgentDB {
 	}
 
 
-	private static void printResultSetfromFaculty(ResultSet rs) throws SQLException
-	{
-		while(rs.next())
-		{
-			String phoneNumber = rs.getString("phoneNumber"); 
-			String agencyName = rs.getString("agencyName"); 
-			int id = rs.getInt("agencyID");
-			System.out.println("ID:" + id + " Name:" + agencyName + " phone#: " + phoneNumber); 
+	/**
+	 * Output the result sets to stdout
+	 * @param rs ResutSet containing agencies' information
+	 */
+	public void displayAget(ResultSet rs, String successMessage, String errorMessage) {
+		try {
+			rs.beforeFirst();
+			if (!rs.isBeforeFirst()) {
+				System.out.println(errorMessage);
+				return;
+			} else {
+				System.out.println(successMessage);
+				System.out.println("-----------------------");
+				System.out.println("ID\tAgent Name\tPhone#"); 
+			}
+			while(rs.next())
+			{
+				int agentID = rs.getInt("agentID"); 
+				String phoneNumber = rs.getString("phoneNumber"); 
+				String agentName = rs.getString("agentName"); 
+
+				System.out.println(agentID + "\t" + agentName + "\t" + phoneNumber); 
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 }
