@@ -22,7 +22,9 @@ public class HousingLookup {
 	private User user;
 	private AgencyPrompt agencyPrompt;
 	private ArchivePrompt archivePrompt;
+	private AgentPrompt agentPrompt;
 	private AgencyDB agencyDb;
+	private AgentDB agentDb;
 	private ArchiveDB archiveDb;
 	
 
@@ -115,8 +117,10 @@ public class HousingLookup {
 	private boolean createDbInstances(Connection conn) {
 		this.agencyDb = AgencyDB.getInstance(conn);
 		this.archiveDb = ArchiveDB.getInstance(conn);
+		this.agentDb = AgentDB.getInstance(conn);
 		if ( this.agencyDb == null || 
-			 this.archiveDb == null) {
+			 this.archiveDb == null ||
+			 this.agentDb == null) {
 			System.err.println("Failed to get instance of AgencyDB or ArchiveDB\n"
 					+ "This class is singleton cannot be instanciated more than one");
 			return false;
@@ -131,6 +135,7 @@ public class HousingLookup {
 	private boolean createPromptInstances(Scanner in) {
 		this.agencyPrompt = AgencyPrompt.getInstance(in, this.agencyDb);
 		this.archivePrompt = ArchivePrompt.getInstance(in, this.archiveDb);
+		this.agentPrompt = AgentPrompt.getInstance(in, this.agentDb);
 
 		if ( this.agencyPrompt == null ||
 			 this.archivePrompt == null ) {
@@ -256,8 +261,14 @@ public class HousingLookup {
 			return;
 		}
 		System.out.println(String.format("Hello, %s! What would you like to do?", user.getUsername()));
-		System.out.print("0: View/update my information\n" + "1: Search for homes\n" + "2: Search for agents\n"
-				+ "3: Find out more about our agencies\n" + "4: Delete account\n" + "5: Logout\nYour choice: ");
+		System.out.print(
+				"0: View/update my information\n" + 
+				"1: Search for homes\n" +
+				"2: Search for agents\n" +
+				"3: Find out more about our agencies\n" +
+				"4: Delete account\n" +
+				"5: Find out more about our agents\n" +
+				"Q: Logout\nYour choice: ");
 		String command = in.nextLine().toLowerCase();
 		switch (command) {
 		case "0":
@@ -277,10 +288,10 @@ public class HousingLookup {
 			promptDeleteAccount();
 			break;
 		case "5":
-			this.logout();
+			this.agentPrompt.promptUser();
 			break;
 		case "q":
-			state = QUIT;
+			this.logout();
 			break;
 		default:
 			System.out.println("Unrecognized input, please try again.");
