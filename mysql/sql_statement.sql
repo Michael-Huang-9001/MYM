@@ -18,7 +18,7 @@ WHERE agentID IN (
         WHERE cost < 2000
 );
 
-#4. Find user who have certain income.
+#4. Find user who have certain income. [ADMIN]
 SELECT userName
 FROM User
 WHERE User.income BETWEEN 2000 and 3000
@@ -52,7 +52,7 @@ WHERE House.agentID IN (
 DELETE FROM User
 WHERE userName = 'Luke Mahoney';
 
-#9. Find agency that has houses located in city A.
+#9. Find agency that has houses located in city A. [User]
 SELECT *
 FROM RealEstateCompany
 WHERE agencyID IN (
@@ -62,7 +62,7 @@ WHERE agencyID IN (
 	WHERE city = 'San Francisco'
 );
 
-#10. Find agency that has agents who can show houses built before some year.
+#10. Find agency that has agents who can show houses built before some year. [User]
 SELECT *
 FROM RealEstateCompany
 WHERE agencyID IN (
@@ -75,17 +75,17 @@ WHERE agencyID IN (
         )
 );
 
-#11. Determine if a user can afford a home (check if income is 2x monthly cost).
+#11. Determine if a user can afford a home (check if income is 2x monthly cost). [User]
 SELECT houseType, street, city, state, cost, bedroomCount, bathroomCount, squarefeet
 FROM House, User
 WHERE user.userid = 10 AND income >= 2*house.cost;
 
-#12. Find available/booked appointments.
+#12. Find available/booked appointments. [User/Admin]
 SELECT *
 FROM Appointments
 Where agentID = 8;
 
-#13. Look up user current booked appointments.
+#13. Look up my current booked appointments. [User]
 SELECT *
 FROM Appointments A
 WHERE EXISTS (
@@ -95,7 +95,7 @@ WHERE EXISTS (
                 AND User.userID = 2
 );
 
-#14. List all the appointment of agents who belong to a certain agency.
+#14. List all the appointment of agents who belong to a certain agency. [User]
 SELECT *
 FROM Appointments
 WHERE agentID IN (
@@ -108,7 +108,7 @@ WHERE agentID IN (
         )
 );
 
-#15. Find houses that has more than certain number of people who are interested
+#15. Find houses that has more than certain number of people who are interested [User]
 SELECT *
 FROM House h
 WHERE EXISTS (

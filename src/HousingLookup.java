@@ -410,7 +410,6 @@ public class HousingLookup {
 		System.out.println("You've logged out.");
 	}
 
-
 	private void searchForHomes() {
 		try {
 			System.out.println("What kind of unit are you looking for? (Leave blank for no preference)");
