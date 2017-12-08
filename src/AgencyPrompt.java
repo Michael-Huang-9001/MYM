@@ -21,6 +21,7 @@ public class AgencyPrompt {
 	private static final int CREATE = 3;
 	private static final int MODIFY = 4;
 	private static final int DELETE = 5;
+	private static final int SEARCH_HOUSE_BY_AGENCY = 6;
 
 	/**
 	 * To prevent from being instantiated
@@ -65,6 +66,11 @@ public class AgencyPrompt {
 				state = SEARCH_BY_YEAR;
 				promptSearchByYear();
 				break;
+
+			case SEARCH_HOUSE_BY_AGENCY:
+				state = this.SEARCH_HOUSE_BY_AGENCY;
+				promptSearchHomeByAgency();
+				break;
 			default:
 				System.out.println("Unrecognized input. Please try again.");
 			}
@@ -83,6 +89,7 @@ public class AgencyPrompt {
 				+ "0: Search agencies by name\n"
 				+ "1: Search agencies that have houses located in a certain city.\n"
 				+ "2: Search agencies that have agents who can show houses built before some year\n"
+				+ "6: Search houses by Agency name\n"
 				+ "B: Type back to go back");
 		String command = scanner.nextLine().toLowerCase();
 		switch (command) {
@@ -96,6 +103,10 @@ public class AgencyPrompt {
 
 		case "2":
 			returnInt = SEARCH_BY_YEAR;
+			break;
+
+		case "6":
+			returnInt = SEARCH_HOUSE_BY_AGENCY;
 			break;
 
 		case "b":
@@ -252,6 +263,22 @@ public class AgencyPrompt {
 		ResultSet AgencyRsultSet = this.agencyDb.searchAngecyByYear(Integer.valueOf(year));
 
 		this.displayAgecy(AgencyRsultSet);
+	}
+
+	/**
+	 * Search houses by the name of agency
+	 * Type the name of agency
+	 * Show the houses
+	 */
+	private void promptSearchHomeByAgency() {
+		final String input = this.getInput("Type name of agency: ");
+
+		if (input == null) {
+			return;
+		}
+
+		ResultSet AgentRsultSet = this.agencyDb.searchHouseByAgency(input);
+		this.agencyDb.displayHouse(AgentRsultSet, "Found Houses", "No House found");
 	}
 
 	/**
@@ -425,6 +452,21 @@ public class AgencyPrompt {
 	 */
 	private void displayAgecy(ResultSet rs) {
 		this.displayAgecy(rs, "Found agencies", "No agency found");
+	}
+	
+	/**
+	 * Used to get user input
+	 * @param inputPrompt Text to be shown to get input 
+	 * @return String of input return null if user input empty string
+	 */
+	private String getInput(String inputPrompt) {
+		System.out.println(inputPrompt);
+		final String input = this.scanner.nextLine();
+		if (input.equals("")) {
+			System.out.println("Invalid input");
+			return null;
+		}
+		return input;
 	}
 
 	public static void main(String[] args) {
