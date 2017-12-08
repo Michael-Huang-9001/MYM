@@ -120,6 +120,7 @@ public class HousingLookup {
 		}
 		return true;
 	}
+
 	/**
 	 * Get instance of AgencyPrompt 
 	 * @param in	to get user input
