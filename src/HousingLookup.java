@@ -25,11 +25,13 @@ public class HousingLookup {
 	private ArchivePrompt archivePrompt;
 	private AgentPrompt agentPrompt;
 	private AdminUserPrompt adminUserPrompt;
+	private UserPrompt userPrompt;
 
 	private AgencyDB agencyDb;
 	private AgentDB agentDb;
 	private ArchiveDB archiveDb;
 	private AdminUserDB adminUserDb;
+	private UserDB userDb;
 	
 
 	public static void main(String args[]) {
@@ -114,10 +116,12 @@ public class HousingLookup {
 		this.archiveDb = ArchiveDB.getInstance(conn);
 		this.agentDb = AgentDB.getInstance(conn);
 		this.adminUserDb = AdminUserDB.getInstance(conn);
+		this.userDb = UserDB.getInstance(conn);
 
 		if ( this.agencyDb == null || 
 			 this.archiveDb == null ||
 			 this.adminUserDb == null ||
+			 this.userDb == null ||
 			 this.agentDb == null) {
 			System.err.println("Failed to get instance of AgencyDB or ArchiveDB\n"
 					+ "This class is singleton cannot be instanciated more than one");
@@ -136,10 +140,12 @@ public class HousingLookup {
 		this.archivePrompt = ArchivePrompt.getInstance(in, this.archiveDb);
 		this.agentPrompt = AgentPrompt.getInstance(in, this.agentDb);
 		this.adminUserPrompt = AdminUserPrompt.getInstance(in, this.adminUserDb);
+		this.userPrompt = UserPrompt.getInstance(in, this.userDb);
 
 		if ( this.agencyPrompt == null ||
 			 this.agentDb == null ||
 			 this.adminUserPrompt == null ||
+			 this.userPrompt == null ||
 			 this.archivePrompt == null ) {
 			System.err.println("Failed to get instance of AgencyPrompt or ArchivePrompt\n"
 					+ "This class is singleton cannot be instanciated more than one");
@@ -270,6 +276,7 @@ public class HousingLookup {
 				"3: Find out more about our agencies\n" +
 				"4: Delete account\n" +
 				"5: Find out more about our agents\n" +
+				"6: Find out affordable houses\n" +
 				"Q: Logout\nYour choice: ");
 		String command = in.nextLine().toLowerCase();
 		switch (command) {
@@ -291,6 +298,9 @@ public class HousingLookup {
 			break;
 		case "5":
 			this.agentPrompt.promptUser();
+			break;
+		case "6":
+			this.userPrompt.promptAffordableHome(user.getIncome());
 			break;
 		case "q":
 			this.logout();
