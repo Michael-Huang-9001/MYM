@@ -44,32 +44,4 @@ public class AdminUserDB {
 		}
 		return rs;
 	}
-
-	/**
-	 * Output the result sets to stdout
-	 * @param rs ResutSet containing agencies' information
-	 */
-	public void displayUser(ResultSet rs, String successMessage, String errorMessage) {
-		try {
-			rs.beforeFirst();
-			if (!rs.isBeforeFirst()) {
-				System.out.println(errorMessage);
-				return;
-			} else {
-				System.out.println(successMessage);
-				System.out.println("-----------------------");
-				System.out.println("userName\tphoneNumber\tincome"); 
-			}
-			while(rs.next())
-			{
-				int income = rs.getInt("income"); 
-				String userName = rs.getString("userName"); 
-				String phoneNumber = rs.getString("phoneNumber"); 
-
-				System.out.println(userName + "\t" + phoneNumber + "\t" + income); 
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
 }

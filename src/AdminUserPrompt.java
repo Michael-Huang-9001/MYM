@@ -116,7 +116,7 @@ public class AdminUserPrompt {
 		}
 
 		ResultSet rs = this.adminUserDb.searchUserByIncome(incomeMin, incomeMax);
-		this.adminUserDb.displayUser(rs, "Found User", "No User found");
+		PrintResultSet.displayUser(rs, "Found User", "No User found");
 	}
 	
 	/**
