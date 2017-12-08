@@ -20,9 +20,11 @@ public class HousingLookup {
 	private PreparedStatement statement;
 	private Connection connection;
 	private User user;
+
 	private AgencyPrompt agencyPrompt;
 	private ArchivePrompt archivePrompt;
 	private AgentPrompt agentPrompt;
+
 	private AgencyDB agencyDb;
 	private AgentDB agentDb;
 	private ArchiveDB archiveDb;
@@ -30,7 +32,6 @@ public class HousingLookup {
 
 	public static void main(String args[]) {
 		HousingLookup housingApp = new HousingLookup();
-		// housingApp.promptUpdateInfo();
 	}
 
 	public HousingLookup() {
@@ -38,14 +39,6 @@ public class HousingLookup {
 			connection = ds.getConnection();
 			statement = connection.prepareStatement("USE Housing_Lookup;");
 			statement.executeUpdate();
-
-			// PreparedStatement stmt=con.prepareStatement("insert into Emp
-			// values(?,?)");
-			// stmt.setInt(1,101);//1 specifies the first parameter in the query
-			// stmt.setString(2,"Ratan");
-			//
-			// int i=stmt.executeUpdate();
-			// System.out.println(i+" records inserted");
 
 			state = ADMIN_OR_USER;
 			in = new Scanner(System.in);
@@ -127,6 +120,7 @@ public class HousingLookup {
 		}
 		return true;
 	}
+
 	/**
 	 * Get instance of AgencyPrompt 
 	 * @param in	to get user input
