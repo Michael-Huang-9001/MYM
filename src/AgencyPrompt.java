@@ -22,6 +22,7 @@ public class AgencyPrompt {
 	private static final int MODIFY = 4;
 	private static final int DELETE = 5;
 	private static final int SEARCH_HOUSE_BY_AGENCY = 6;
+	private static final int SEARCH_APPT_BY_AGENCY = 7;
 
 	/**
 	 * To prevent from being instantiated
@@ -71,6 +72,7 @@ public class AgencyPrompt {
 				state = this.SEARCH_HOUSE_BY_AGENCY;
 				promptSearchHomeByAgency();
 				break;
+
 			default:
 				System.out.println("Unrecognized input. Please try again.");
 			}
@@ -166,6 +168,11 @@ public class AgencyPrompt {
 				System.out.println("Delete");
 				break;
 
+			case SEARCH_APPT_BY_AGENCY:
+				state = this.SEARCH_APPT_BY_AGENCY;
+				this.promptSearchApptByAgency();
+				break;
+
 			default:
 				System.out.println("Unrecognized input. Please try again.");
 			}
@@ -186,6 +193,7 @@ public class AgencyPrompt {
 				+ "3: Create new agency\n"
 				+ "4: Update an existing agency\n"
 				+ "5: Delete an existing agency\n"
+				+ "7: Search Appointment by Agency name\n"
 				+ "B: Type back to go back");
 		String command = scanner.nextLine().toLowerCase();
 		switch (command) {
@@ -213,6 +221,10 @@ public class AgencyPrompt {
 			returnInt = DELETE;
 			break;
 
+		case "7":
+			returnInt = SEARCH_APPT_BY_AGENCY;
+			break;
+
 		case "b":
 		case "back":
 			returnInt = QUIT;
@@ -221,6 +233,15 @@ public class AgencyPrompt {
 		return returnInt;
 	}
 
+	private void promptSearchApptByAgency() {
+		final String input = this.getInput("Type name of agency: ");
+		if (input.equals("")) {
+			return;
+		}
+		
+		ResultSet rs = this.agencyDb.searchApptByAgencyName(input); 
+		PrintResultSet.displayAppt(rs, "Found appointments", "No appointment found");
+	}
 	/**
 	 * Prompt user to type agency name that the user
 	 * wants to search.
