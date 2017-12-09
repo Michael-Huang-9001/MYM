@@ -564,14 +564,14 @@ public class HousingLookup {
 				for (House h : result) {
 					System.out.println(h.toString());
 				}
-				System.out.print("Interested in a home? Please enter the House ID to contact the agent: ");
+				System.out.print("\nInterested in a home? Please enter the House ID to contact the agent: ");
 				String house = in.nextLine();
 				if (!house.matches("[0-9]*")) {
 					throw new Exception("A House ID should be numeric.");
-				} else {
+				} else if (!house.isEmpty()) {
 					int houseID = Integer.parseInt(house);
 					House houseTarget = null;
-					for (House h: result) {
+					for (House h : result) {
 						if (h.getHouseID() == houseID) {
 							houseTarget = h;
 							break;
@@ -582,8 +582,14 @@ public class HousingLookup {
 					} else {
 						Agent agent = houseTarget.getAgent(connection);
 						if (agent != null) {
-							System.out.println("Here is the agent associated with the house.");
+							System.out.println("\nThis is the agent associated with the house.");
 							System.out.println(agent.toString());
+							System.out.printf("%-15s %-10s %-30s %-20s %-7s %-10s %-10s %-10s %-15s %-12s %-15s",
+									"House Type", "House ID", "Street", "City", "State", "Zipcode", "Bedrooms",
+									"Bathrooms", "Square Feet", "Year Built", "Monthly Cost");
+							System.out.println("\n" + houseTarget.toString() + "\n");
+							System.out.println(
+									"Would you like to schedule an appointment to speak to this agent regarding this home?");
 						}
 					}
 				}
