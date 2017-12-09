@@ -1,7 +1,7 @@
 SET sql_mode='';
 DROP DATABASE IF EXISTS Housing_Lookup;
 CREATE DATABASE Housing_Lookup;
-USE Housing_Lookup; 
+USE Housing_Lookup;
 
 #DROP TABLE IF EXISTS RealEstateCompany;
 CREATE TABLE RealEstateCompany(
@@ -18,7 +18,7 @@ CREATE TABLE Agent (
         phoneNumber VARCHAR(30),
         agencyID INT,
         agentID INT AUTO_INCREMENT,
-        FOREIGN KEY(agencyID) 
+        FOREIGN KEY(agencyID)
                 REFERENCES RealEstateCompany(agencyID)
                 ON DELETE CASCADE,
         PRIMARY KEY(agentID)
@@ -31,8 +31,8 @@ CREATE TABLE User(
         phoneNumber VARCHAR(20),
         income INT,
         agentID INT,
-        updatedAt TIMESTAMP 
-                NOT NULL 
+        updatedAt TIMESTAMP
+                NOT NULL
                 DEFAULT NOW() ON UPDATE NOW(),
         FOREIGN KEY(agentID)
                 REFERENCES Agent(agentID)
@@ -55,7 +55,7 @@ CREATE TABLE House(
         squareFeet DOUBLE,
         agentID INT,
         houseID INT AUTO_INCREMENT,
-        FOREIGN KEY(agentID) 
+        FOREIGN KEY(agentID)
                 REFERENCES Agent(agentID)
                 ON DELETE CASCADE,
         PRIMARY KEY(houseID)
@@ -69,14 +69,11 @@ CREATE TABLE Appointments(
         houseID INT,
         date_time DATETIME,
         appointmentID INT AUTO_INCREMENT,
-        FOREIGN KEY(agentID) 
+        FOREIGN KEY(agentID)
                 REFERENCES Agent(agentID)
                 ON DELETE CASCADE,
-        FOREIGN KEY(userName) 
+        FOREIGN KEY(userName)
                 REFERENCES User(userName)
-                ON DELETE CASCADE,
-        FOREIGN KEY(houseID) 
-                REFERENCES House(houseID)
                 ON DELETE CASCADE,
         PRIMARY KEY(appointmentID)
 );
@@ -92,22 +89,23 @@ CREATE TABLE Archive(
 
 DROP PROCEDURE IF EXISTS archiveInactiveUser;
 DELIMITER //
-CREATE PROCEDURE archiveInactiveUser(IN cutoff VARCHAR(50))
-BEGIN
-        # Insert User tuples to Archive relation
-        INSERT INTO Archive (userName, phoneNumber, income, agentID, updatedAt)
-                # Find users that has not been after cutoff date
-                SELECT userName, phoneNumber, income, agentID, updatedAt
+        CREATE PROCEDURE archiveInactiveUser(IN cutoff VARCHAR(50))
+        BEGIN
+                # Insert User tuples to Archive relation
+                INSERT INTO Archive (userName, phoneNumber, income, agentID, updatedAt)
+                        # Find users that has not been after cutoff date
+                        SELECT userName, phoneNumber, income, agentID, updatedAt
+                        FROM User
+                        WHERE updatedAt < cutoff;
+                # Delete archived users tuples
+                DELETE
                 FROM User
                 WHERE updatedAt < cutoff;
-        # Delete archived users tuples
-        DELETE
-        FROM User
-        WHERE updatedAt < cutoff;
-END//
+        END//
 DELIMITER ;
 
-LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/RealEstateCompany.csv' 
+
+LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/RealEstateCompany.csv'
 INTO TABLE RealEstateCompany
 FIELDS TERMINATED BY ',';
 
@@ -126,3 +124,42 @@ FIELDS TERMINATED BY ',';
 LOAD DATA LOCAL INFILE '/Users/yk/Code/CS157A/project/mysql/Appointments.csv'
 INTO TABLE Appointments
 FIELDS TERMINATED BY ',';
+
+# One user can book only one appointment
+DROP TRIGGER IF EXISTS InsertTrigger;
+delimiter //
+CREATE TRIGGER InsertTrigger
+Before INSERT ON Appointments
+FOR EACH ROW
+BEGIN
+  # IF NEW.userName = 'Yuki'
+  # IF NEW.date_time < NOW()
+  IF exists (SELECT * from Appointments where NEW.userName = Appointments.userName)
+  THEN
+    signal sqlstate '23000' set message_text = 'This user already has an appointment. One user can book only one appointment';
+END IF;
+END;
+//
+delimiter ;
+
+# One agent can have only one appointment on the same time
+DROP TRIGGER IF EXISTS agentAppt;
+delimiter //
+CREATE TRIGGER agentAppt
+Before INSERT ON Appointments
+FOR EACH ROW
+BEGIN
+  # IF NEW.userName = 'Yuki'
+  # IF NEW.date_time < NOW()
+  IF exists (
+    SELECT *
+    from Appointments
+    # where NEW.appointmentID = Appointments.appointmentID
+    where  NEW.date_time < NOW()
+  )
+  THEN
+    signal sqlstate '23000' set message_text = 'Cannot book an appointment pased date and time';
+END IF;
+END;
+//
+delimiter ;
