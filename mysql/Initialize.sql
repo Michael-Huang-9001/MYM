@@ -75,6 +75,9 @@ CREATE TABLE Appointments(
         FOREIGN KEY(userName) 
                 REFERENCES User(userName)
                 ON DELETE CASCADE,
+        FOREIGN KEY(houseID) 
+                REFERENCES House(houseID)
+                ON DELETE CASCADE,
         PRIMARY KEY(appointmentID)
 );
 

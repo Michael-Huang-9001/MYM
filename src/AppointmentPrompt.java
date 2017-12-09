@@ -47,7 +47,6 @@ public class AppointmentPrompt {
 	 * @param userName used to query appointment table
 	 */
 	public void promptUser(String userName) {
-		System.out.println("[ADMIN] What would you like to do about agencies?");
 		boolean quit = false;
 		while (quit == false) {
 			String input = this.getInput(PROMPT_USER_STRING).toLowerCase();
@@ -59,24 +58,12 @@ public class AppointmentPrompt {
 
 			// Make new appointment
 			case "2":
+				this.promptMakeAppt(userName);
 				break;
 
 			// Delete existing appt
 			case "3":
 				break;
-
-			// Search
-			case "4":
-				break;
-
-			// Search
-			case "5":
-				break;
-
-			// Search
-			case "6":
-				break;
-			
 
 			case "b":
 			case "back":
@@ -87,6 +74,35 @@ public class AppointmentPrompt {
 				System.out.println("Unrecognized input. Please try again.");
 			}
 		}
+	}
+	
+	/**
+	 * Prompt user to create new appointment
+	 * 
+	 */
+
+	private void promptMakeAppt(String userName) {
+		final String agentId = this.getInput("Type agent ID: ");
+		final String houseId = this.getInput("Type house ID: ");
+		final String dateTime = this.getInput("Type Date and Time [YYYY-MM-DD HH:MM]");
+
+		if ( agentId.equals("") ||
+			 houseId.equals("") ||
+			 dateTime.equals("")) {
+			return;
+		}
+
+		final boolean created = this.apptDb.insertAppt(
+				userName,
+				agentId,
+				houseId,
+				dateTime
+				);
+		
+		if (created) {
+			System.out.println("Appointment created successfully");
+		}
+		
 	}
 	
 	/**
