@@ -124,8 +124,8 @@ public class House {
 	}
 
 	public String toString() {
-		return String.format("%-15s %-30s %-20s %-7s %-10s %-10s %-10s %-12s %-15s", houseType, street, city, state,
-				zipcode, bedroomCount, bathroomCount, year, "$" + cost);
+		return String.format("%-15s %-10s %-30s %-20s %-7s %-10s %-10s %-10s %-15s %-12s %-15s", houseType, houseID, street, city, state,
+				zipcode, bedroomCount, bathroomCount, squareFeet, year, "$" + cost);
 	}
 
 	public static ArrayList<House> searchHomes(Connection connection, String houseType, int minCost, int maxCost,
@@ -197,6 +197,31 @@ public class House {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public Agent getAgent(Connection conn) {
+		String query = "SELECT agentName, agentID, agencyID, phoneNumber FROM House NATURAL JOIN Agent WHERE houseID = ?;";
+		try {
+			PreparedStatement statement = conn.prepareStatement(query);
+			statement.setInt(1, houseID);
+			ResultSet result = statement.executeQuery();
+			Agent agent = new Agent();
+			if (result.first()) {
+				agent.setAgencyID(result.getInt("agencyID"));
+				agent.setAgentID(result.getInt("agentID"));
+				agent.setAgentName(result.getString("agentName"));
+				agent.setPhoneNumber(result.getString("phoneNumber"));
+			} else {
+				throw new Exception("No agent exists for this house in the database.");
+			}
+			return agent;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
 	}
 
 	public static void main(String[] args) {
