@@ -6,6 +6,40 @@ public class PrintResultSet {
 
 	/**
 	 * Output the result sets to stdout
+	 * @param rs ResutSet containing appointments' information
+	 */
+	public static void displayAppt(ResultSet rs, String successMessage, String errorMessage) {
+		try {
+			rs.beforeFirst();
+			if (!rs.isBeforeFirst()) {
+				System.out.println(errorMessage);
+				return;
+			} else {
+				System.out.println(successMessage);
+				System.out.println("-----------------------");
+				System.out.println("ID\tuserName\tAgentID\tHouseID\tDate"); 
+			}
+			while(rs.next())
+			{
+				int appointmentID = rs.getInt("appointmentID"); 
+				String userName = rs.getString("userName"); 
+				int agentID = rs.getInt("agentID"); 
+				int houseID = rs.getInt("houseID"); 
+				String date_time = rs.getString("date_time"); 
+
+				System.out.println(
+						appointmentID + "\t"
+						+ userName + "\t" 
+						+ agentID + "\t"
+						+ houseID + "\t"
+						+ date_time); 
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * Output the result sets to stdout
 	 * @param rs ResutSet containing users' information
 	 */
 	public static void displayUser(ResultSet rs, String successMessage, String errorMessage) {

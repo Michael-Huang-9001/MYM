@@ -26,12 +26,14 @@ public class HousingLookup {
 	private AgentPrompt agentPrompt;
 	private AdminUserPrompt adminUserPrompt;
 	private UserPrompt userPrompt;
+	private AppointmentPrompt apptPrompt;
 
 	private AgencyDB agencyDb;
 	private AgentDB agentDb;
 	private ArchiveDB archiveDb;
 	private AdminUserDB adminUserDb;
 	private UserDB userDb;
+	private AppointmentDB apptDb;
 	
 
 	public static void main(String args[]) {
@@ -117,11 +119,13 @@ public class HousingLookup {
 		this.agentDb = AgentDB.getInstance(conn);
 		this.adminUserDb = AdminUserDB.getInstance(conn);
 		this.userDb = UserDB.getInstance(conn);
+		this.apptDb = AppointmentDB.getInstance(conn);
 
 		if ( this.agencyDb == null || 
 			 this.archiveDb == null ||
 			 this.adminUserDb == null ||
 			 this.userDb == null ||
+			 this.apptDb == null ||
 			 this.agentDb == null) {
 			System.err.println("Failed to get instance of AgencyDB or ArchiveDB\n"
 					+ "This class is singleton cannot be instanciated more than one");
@@ -141,11 +145,13 @@ public class HousingLookup {
 		this.agentPrompt = AgentPrompt.getInstance(in, this.agentDb);
 		this.adminUserPrompt = AdminUserPrompt.getInstance(in, this.adminUserDb);
 		this.userPrompt = UserPrompt.getInstance(in, this.userDb);
+		this.apptPrompt = AppointmentPrompt.getInstance(in, this.apptDb);
 
 		if ( this.agencyPrompt == null ||
 			 this.agentDb == null ||
 			 this.adminUserPrompt == null ||
 			 this.userPrompt == null ||
+			 this.apptPrompt == null ||
 			 this.archivePrompt == null ) {
 			System.err.println("Failed to get instance of AgencyPrompt or ArchivePrompt\n"
 					+ "This class is singleton cannot be instanciated more than one");
@@ -277,6 +283,7 @@ public class HousingLookup {
 				"4: Delete account\n" +
 				"5: Find out more about our agents\n" +
 				"6: Find out affordable houses\n" +
+				"7: Find out appointments\n" +
 				"Q: Logout\nYour choice: ");
 		String command = in.nextLine().toLowerCase();
 		switch (command) {
@@ -301,6 +308,9 @@ public class HousingLookup {
 			break;
 		case "6":
 			this.userPrompt.promptAffordableHome(user.getIncome());
+			break;
+		case "7":
+			this.apptPrompt.promptUser(user.getUsername());
 			break;
 		case "q":
 			this.logout();
@@ -580,11 +590,14 @@ public class HousingLookup {
 					if (houseTarget == null) {
 						System.out.println("No such house exists in the search result.");
 					} else {
+						/*
+						 * TODO Create getAgent method
 						Agent agent = houseTarget.getAgent(connection);
 						if (agent != null) {
 							System.out.println("Here is the agent associated with the house.");
 							System.out.println(agent.toString());
 						}
+						*/
 					}
 				}
 			} else {
