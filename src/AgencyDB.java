@@ -25,6 +25,41 @@ public class AgencyDB {
 	}
 
 	/**
+	 * Find appointment by agency name
+	 * @param name	Name of agency to be searched
+	 * @return	query result contains Agency information
+	 */
+	public ResultSet searchApptByAgencyName(String name) {
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		try {
+			String sql = null;
+			sql = "SELECT * "
+					+ "FROM Appointments "
+					+ "WHERE agentID IN ( "
+					+ "SELECT agentID "
+					+ "FROM Agent "
+					+ "WHERE agencyID IN ( "
+					+ "SELECT agencyID "
+					+ "FROM RealEstateCompany "
+					+ "WHERE agencyName = ?));"; 
+
+			preparedStatement = connection.prepareStatement(sql);
+
+			// Set the name
+			preparedStatement.setString(1, name);
+
+			// Execute
+			rs = preparedStatement.executeQuery();
+
+			// printResultSetfromFaculty(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rs;
+	}
+
+	/**
 	 * Perform query on Agency by name
 	 * @param name	Name of agency to be searched
 	 * @return	query result contains Agency information

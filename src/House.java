@@ -199,6 +199,7 @@ public class House {
 		}
 	}
 	
+	/*
 	public Agent getAgent(Connection conn) {
 		String query = "SELECT agentName, agentID, agencyID, phoneNumber FROM House NATURAL JOIN Agent WHERE houseID = ?;";
 		try {
@@ -223,6 +224,7 @@ public class House {
 		}
 		return null;
 	}
+	*/
 
 	public static void main(String[] args) {
 
