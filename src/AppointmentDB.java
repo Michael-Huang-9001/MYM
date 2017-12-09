@@ -22,6 +22,35 @@ public class AppointmentDB {
 		this.connection = conn;
 	}
 
+	public boolean deleteAppt (
+			String userName,
+			String apptID
+			) {
+
+		PreparedStatement preparedStatement = null;
+		try {
+			String sql = null;
+			sql = "DELETE FROM Appointments "
+					+ "WHERE userName = ? AND appointmentID = ?;"; 
+			preparedStatement = connection.prepareStatement(sql);
+
+			preparedStatement.setString(1, userName);
+			preparedStatement.setInt(2, Integer.valueOf(apptID));
+
+			// Execute
+			final int numRowsAffected = preparedStatement.executeUpdate();
+
+			if (numRowsAffected == 0) {
+				System.out.println("Could not cancel appointment\n"
+						+ "because you typed an incorrect Appointment ID");
+				return false;
+			}
+			return true;
+		} catch (SQLException e) {
+			PrintErrorMessage.PrintMessage(e.getSQLState());
+			return false;
+		}
+	}
 	/**
 	 * 
 	 * @param userName

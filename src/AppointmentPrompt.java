@@ -63,6 +63,7 @@ public class AppointmentPrompt {
 
 			// Delete existing appt
 			case "3":
+				this.promptDeleteAppt(userName);
 				break;
 
 			case "b":
@@ -76,6 +77,32 @@ public class AppointmentPrompt {
 		}
 	}
 	
+	/**
+	 * Show the appointments
+	 * Ask which apptId to cancel
+	 * @param userName
+	 */
+	private void promptDeleteAppt(String userName) {
+		System.out.println("Showing your current appointments");
+		this.showUserAppointment(userName);
+
+		final String apptId = this.getInput("Type Appointment ID that you want to cancel");
+
+		if ( apptId.equals("") ) {
+			return;
+		}
+
+		final boolean deleted = this.apptDb.deleteAppt(
+				userName,
+				apptId
+				);
+		
+		if (deleted) {
+			System.out.println("Appointment deleted successfully");
+		}
+		
+	}
+
 	/**
 	 * Prompt user to create new appointment
 	 * 
