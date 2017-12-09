@@ -47,7 +47,7 @@ public class AppointmentDB {
 			}
 			return true;
 		} catch (SQLException e) {
-			PrintErrorMessage.PrintMessage(e.getSQLState());
+			PrintErrorMessage.PrintMessage(e.getSQLState(), e.getMessage());
 			return false;
 		}
 	}
@@ -85,7 +85,7 @@ public class AppointmentDB {
 			// printResultSetfromFaculty(rs);
 			return true;
 		} catch (SQLException e) {
-			PrintErrorMessage.PrintMessage(e.getSQLState());
+			PrintErrorMessage.PrintMessage(e.getSQLState(), e.getMessage());
 			return false;
 		}
 	}

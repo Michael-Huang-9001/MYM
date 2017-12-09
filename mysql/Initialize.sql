@@ -158,7 +158,7 @@ BEGIN
     where  NEW.date_time < NOW()
   )
   THEN
-    signal sqlstate '23000' set message_text = 'Cannot book an appointment pased date and time';
+    signal sqlstate '23000' set message_text = 'Cannot book an appointment passed date and time';
 END IF;
 END;
 //
