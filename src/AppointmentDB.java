@@ -22,6 +22,45 @@ public class AppointmentDB {
 		this.connection = conn;
 	}
 
+	/**
+	 * 
+	 * @param userName
+	 * @param agentId
+	 * @param houseId
+	 * @param dateTime
+	 * @return True if created false if failed
+	 */
+	public boolean insertAppt (
+			String userName,
+			String agentId,
+			String houseId,
+			String dateTime
+			) {
+
+		PreparedStatement preparedStatement = null;
+		try {
+			String sql = null;
+			sql = "INSERT INTO Appointments(userName, agentID, houseID, date_time) "
+					+ "VALUE(?, ?, ?, ?);";
+
+			preparedStatement = connection.prepareStatement(sql);
+
+			preparedStatement.setString(1, userName);
+			preparedStatement.setInt(2, Integer.valueOf(agentId));
+			preparedStatement.setInt(3, Integer.valueOf(houseId));
+			preparedStatement.setString(4, dateTime);
+
+			// Execute
+			preparedStatement.executeUpdate();
+
+			// printResultSetfromFaculty(rs);
+			return true;
+		} catch (SQLException e) {
+			PrintErrorMessage.PrintMessage(e.getSQLState());
+			return false;
+		}
+	}
+
 	public ResultSet searchApptByUserName (String userName) {
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
