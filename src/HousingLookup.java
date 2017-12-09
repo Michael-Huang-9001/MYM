@@ -27,6 +27,7 @@ public class HousingLookup {
 	private AdminUserPrompt adminUserPrompt;
 	private UserPrompt userPrompt;
 	private AppointmentPrompt apptPrompt;
+	private HousePrompt housePrompt;
 
 	private AgencyDB agencyDb;
 	private AgentDB agentDb;
@@ -34,6 +35,7 @@ public class HousingLookup {
 	private AdminUserDB adminUserDb;
 	private UserDB userDb;
 	private AppointmentDB apptDb;
+	private HouseDB houseDb;
 	
 
 	public static void main(String args[]) {
@@ -120,12 +122,14 @@ public class HousingLookup {
 		this.adminUserDb = AdminUserDB.getInstance(conn);
 		this.userDb = UserDB.getInstance(conn);
 		this.apptDb = AppointmentDB.getInstance(conn);
+		this.houseDb = HouseDB.getInstance(conn);
 
 		if ( this.agencyDb == null || 
 			 this.archiveDb == null ||
 			 this.adminUserDb == null ||
 			 this.userDb == null ||
 			 this.apptDb == null ||
+			 this.houseDb == null ||
 			 this.agentDb == null) {
 			System.err.println("Failed to get instance of AgencyDB or ArchiveDB\n"
 					+ "This class is singleton cannot be instanciated more than one");
@@ -146,12 +150,14 @@ public class HousingLookup {
 		this.adminUserPrompt = AdminUserPrompt.getInstance(in, this.adminUserDb);
 		this.userPrompt = UserPrompt.getInstance(in, this.userDb);
 		this.apptPrompt = AppointmentPrompt.getInstance(in, this.apptDb);
+		this.housePrompt = HousePrompt.getInstance(in, this.houseDb);
 
 		if ( this.agencyPrompt == null ||
 			 this.agentDb == null ||
 			 this.adminUserPrompt == null ||
 			 this.userPrompt == null ||
 			 this.apptPrompt == null ||
+			 this.housePrompt == null ||
 			 this.archivePrompt == null ) {
 			System.err.println("Failed to get instance of AgencyPrompt or ArchivePrompt\n"
 					+ "This class is singleton cannot be instanciated more than one");
@@ -331,6 +337,7 @@ public class HousingLookup {
 				+ "5: Find out more about our agents\n"
 				+ "6: Archive user\n"
 				+ "7: More about user\n"
+				+ "8: More about houses\n"
 				+ "Q: Logout\nYour choice: ");
 		String command = in.nextLine().toLowerCase();
 		switch (command) {
@@ -355,6 +362,10 @@ public class HousingLookup {
 
 		case "7":
 			this.adminUserPrompt.promptAdmin();
+			break;
+
+		case "8":
+			this.housePrompt.promptAdmin();
 			break;
 
 		case "Q":
