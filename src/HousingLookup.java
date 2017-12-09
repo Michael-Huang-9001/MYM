@@ -554,15 +554,43 @@ public class HousingLookup {
 			ArrayList<House> result = House.searchHomes(connection, houseType, minCost, maxCost, city, state, zipcode,
 					minBedroomCount, maxBedroomCount, minBathroomCount, maxBathroomCount, minYear, maxYear);
 
-			System.out.println("\nSearch parameters yielded " + result.size() + " results.\n");
+			System.out.println("\nSearch parameters yielded " + result.size() + " results.");
 			if (result.size() > 0) {
-				System.out.printf("%-15s %-30s %-20s %-7s %-10s %-10s %-10s %-12s %-15s", "House Type", "Street",
-						"City", "State", "Zipcode", "Bedrooms", "Bathrooms", "Year Built", "Monthly Cost");
+				System.out.println();
+				System.out.printf("%-15s %-10s %-30s %-20s %-7s %-10s %-10s %-10s %-15s %-12s %-15s", "House Type",
+						"House ID", "Street", "City", "State", "Zipcode", "Bedrooms", "Bathrooms", "Square Feet",
+						"Year Built", "Monthly Cost");
+				System.out.println();
+				for (House h : result) {
+					System.out.println(h.toString());
+				}
+				System.out.print("Interested in a home? Please enter the House ID to contact the agent: ");
+				String house = in.nextLine();
+				if (!house.matches("[0-9]*")) {
+					throw new Exception("A House ID should be numeric.");
+				} else {
+					int houseID = Integer.parseInt(house);
+					House houseTarget = null;
+					for (House h: result) {
+						if (h.getHouseID() == houseID) {
+							houseTarget = h;
+							break;
+						}
+					}
+					if (houseTarget == null) {
+						System.out.println("No such house exists in the search result.");
+					} else {
+						Agent agent = houseTarget.getAgent(connection);
+						if (agent != null) {
+							System.out.println("Here is the agent associated with the house.");
+							System.out.println(agent.toString());
+						}
+					}
+				}
+			} else {
+				System.out.println("Please check your search parameters.");
 			}
 			System.out.println();
-			for (House h : result) {
-				System.out.println(h.toString());
-			}
 
 		} catch (SQLException sql) {
 			sql.printStackTrace();
